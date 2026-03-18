@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DRT Connect Dashboard</title>
+  <meta name="description" content="DRT Connect - Deal Review & Tracking Dashboard">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="day">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo-wrap">
+          <img src="DRT%20Connect%20Logo.png" alt="DRT Connect" class="brand-logo">
+        </div>
+        <img src="DS_Primary.png" alt="Data Solutions" class="brand-partner-logo">
+      </div>
+
+      <nav class="nav-panel" aria-label="Primary">
+        <button class="nav-action is-active" data-modal="create">
+          <span class="action-icon">+</span>
+          <span>Create New</span>
+        </button>
+        <button class="nav-action" data-modal="priority">
+          <span class="action-icon">!</span>
+          <span>High Priority</span>
+        </button>
+        <button class="nav-action" data-modal="reports">
+          <span class="action-icon">R</span>
+          <span>Reports</span>
+        </button>
+        <button class="nav-action" data-modal="search">
+          <span class="action-icon">S</span>
+          <span>Search</span>
+        </button>
+        <button class="nav-action" data-modal="settings">
+          <span class="action-icon">?</span>
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to night theme">
+          <span class="theme-toggle-track">
+            <span class="theme-icon sun-moon">
+              <span class="sun-core"></span>
+              <span class="moon-cut"></span>
+              <span class="ray ray-1"></span>
+              <span class="ray ray-2"></span>
+              <span class="ray ray-3"></span>
+              <span class="ray ray-4"></span>
+            </span>
+          </span>
+          <span class="theme-label">Day Mode</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">DD Version</p>
+          <h2>Hello William Peddity</h2>
+        </div>
+
+      </header>
+
+      <section class="hero-grid">
+        <article class="hero-card feature-card">
+          <div>
+            <p class="eyebrow">My Metrics</p>
+            <h3>Quarter close acceleration</h3>
+            <p>Focus on discount control, stale approvals, and DRT ownership handoff.</p>
+          </div>
+          <div class="feature-stats">
+            <div>
+              <strong>84%</strong>
+              <span>Approval SLA</span>
+            </div>
+            <div>
+              <strong>29</strong>
+              <span>Open DRTs</span>
+            </div>
+            <div>
+              <strong>4.2d</strong>
+              <span>Avg turnaround</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="metrics-grid" aria-label="Key metrics">
+        <article class="metric-card">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">Closed</p>
+              <h3>FY27 Q2</h3>
+            </div>
+            <strong>126</strong>
+          </div>
+          <div class="mini-bars" aria-hidden="true">
+            <span style="--bar: 72%"></span>
+            <span style="--bar: 48%"></span>
+            <span style="--bar: 81%"></span>
+            <span style="--bar: 60%"></span>
+            <span style="--bar: 92%"></span>
+            <span style="--bar: 67%"></span>
+          </div>
+        </article>
+
+        <article class="metric-card">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">Avg. Discount %</p>
+              <h3>Controlled</h3>
+            </div>
+            <strong>11.8%</strong>
+          </div>
+          <div class="progress-band">
+            <span style="width: 38%"></span>
+          </div>
+          <p class="card-footnote">2.1 points below the quarterly ceiling</p>
+        </article>
+
+        <article class="metric-card">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">Avg Close Rate</p>
+              <h3>Conversion view</h3>
+            </div>
+            <strong>63%</strong>
+          </div>
+          <div class="ring-chart" aria-hidden="true">
+            <span>63%</span>
+          </div>
+        </article>
+
+        <article class="metric-card">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">NNAOV/ACV</p>
+              <h3>Value mix</h3>
+            </div>
+            <strong>1.28x</strong>
+          </div>
+          <div class="stacked-bars" aria-hidden="true">
+            <span class="bar-primary" style="width: 78%"></span>
+            <span class="bar-secondary" style="width: 58%"></span>
+            <span class="bar-accent" style="width: 44%"></span>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">DRT Queue</p>
+              <h3>Priority routing</h3>
+            </div>
+            <div class="panel-tabs" aria-label="Queue filters">
+              <button class="tab-pill is-selected" type="button">High Priority</button>
+              <button class="tab-pill" type="button">Assigned</button>
+              <button class="tab-pill" type="button">My DRTs</button>
+              <button class="tab-pill" type="button">All Open</button>
+              <button class="tab-pill" type="button">Closed</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Priority</th>
+                  <th>Account</th>
+                  <th>Owner</th>
+                  <th>Created</th>
+                  <th>Last Modified</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="drtRows">
+                <tr data-search="DRT-1042 High Apex Systems Maya Chen Pending pricing review">
+                  <td>DRT-1042</td>
+                  <td><span class="status-chip high">High</span></td>
+                  <td>Apex Systems</td>
+                  <td>Maya Chen</td>
+                  <td>Mar 11</td>
+                  <td>1 hour ago</td>
+                  <td>Pending pricing review</td>
+                </tr>
+                <tr data-search="DRT-1035 Medium Northstar Health Wilson Peddity Awaiting finance">
+                  <td>DRT-1035</td>
+                  <td><span class="status-chip medium">Medium</span></td>
+                  <td>Northstar Health</td>
+                  <td>Wilson Peddity</td>
+                  <td>Mar 09</td>
+                  <td>Today</td>
+                  <td>Awaiting finance</td>
+                </tr>
+                <tr data-search="DRT-1028 High Brightline Media Noor Patel Approval draft ready">
+                  <td>DRT-1028</td>
+                  <td><span class="status-chip high">High</span></td>
+                  <td>Brightline Media</td>
+                  <td>Noor Patel</td>
+                  <td>Mar 08</td>
+                  <td>Yesterday</td>
+                  <td>Approval draft ready</td>
+                </tr>
+                <tr data-search="DRT-1019 Low Vertex Manufacturing Ishan Rao Closed won">
+                  <td>DRT-1019</td>
+                  <td><span class="status-chip low">Low</span></td>
+                  <td>Vertex Manufacturing</td>
+                  <td>Ishan Rao</td>
+                  <td>Mar 03</td>
+                  <td>Mar 12</td>
+                  <td>Closed won</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Close panel">x</button>
+      <p class="eyebrow" id="modalEyebrow">Action</p>
+      <h2 id="modalTitle">Create New DRT</h2>
+      <p class="modal-copy" id="modalCopy">Capture the business context, route it to the right owner, and keep the close motion visible.</p>
+
+      <div class="modal-layout" id="modalLayout">
+        <div class="modal-block">
+          <label for="modalInput">Opportunity or account</label>
+          <input id="modalInput" type="text" placeholder="Start typing">
+        </div>
+        <div class="modal-block">
+          <label for="modalSecondary">Notes</label>
+          <textarea id="modalSecondary" rows="4" placeholder="Add routing notes or search terms"></textarea>
+        </div>
+      </div>
+
+      <div class="search-results" id="searchResults" hidden>
+        <button class="search-result" type="button">Apex Systems · Pending pricing review</button>
+        <button class="search-result" type="button">Northstar Health · Awaiting finance</button>
+        <button class="search-result" type="button">Brightline Media · Approval draft ready</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="ghost-button" id="secondaryAction" type="button">Cancel</button>
+        <button class="primary-button" id="primaryAction" type="button">Continue</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
