@@ -1229,13 +1229,13 @@ th.sortable:hover { color: var(--text); }
   height: 0;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 5px solid currentColor;
+  border-bottom: 5px solid currentColor;
 }
 
 th.sort-active .sort-arrow { color: var(--accent-strong); background: var(--accent-soft); }
 th.sort-active .sort-arrow.sort-desc::after {
-  border-top: none;
-  border-bottom: 5px solid currentColor;
+  border-bottom: none;
+  border-top: 5px solid currentColor;
 }
 
 .table-wrap {

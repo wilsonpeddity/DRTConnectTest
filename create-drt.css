@@ -240,6 +240,27 @@
   display: none;
 }
 
+.create-drt-filter-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-drt-filter-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.create-drt-filter-select {
+  min-width: 180px;
+}
+
+.create-drt-table tbody tr.product-filter-hidden {
+  display: none;
+}
+
 .create-drt-add-rows-wrap {
   display: inline-flex;
   align-items: center;
@@ -295,6 +316,7 @@
 .create-drt-table-wrap {
   overflow-x: auto;
   overflow-y: auto;
+  height: 70vh;
   max-height: 70vh;
   min-width: 100%;
   border: 1px solid var(--border);
@@ -326,9 +348,35 @@
   text-align: center;
   white-space: nowrap;
   position: sticky;
-  top: 0;
-  z-index: 2;
   border-right: 1px solid rgba(255,255,255,0.35);
+}
+
+/* Multi-row sticky header: each row sticks at cumulative offset when scrolling */
+.create-drt-table.input-style-excel thead tr.create-drt-header-row-0 th {
+  top: 0;
+  z-index: 12;
+}
+.create-drt-table.input-style-excel thead tr.create-drt-header-row-1 th {
+  top: 40px;
+  z-index: 11;
+}
+.create-drt-table.input-style-excel thead tr.create-drt-header-row-2 th {
+  top: 88px;
+  z-index: 10;
+}
+
+.create-drt-table:not(.input-style-excel) thead tr.create-drt-header-row-1 th {
+  top: 0;
+  z-index: 11;
+}
+.create-drt-table:not(.input-style-excel) thead tr.create-drt-header-row-2 th {
+  top: 48px;
+  z-index: 10;
+}
+
+/* Shadow under last header row when sticky header is scrolled */
+.create-drt-table thead tr.create-drt-header-row-2 th {
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.2);
 }
 
 .create-drt-table th:last-child {
@@ -381,10 +429,22 @@
 
 .create-drt-table th.col-excel-canvas {
   background-color: #217346;
+  color: #fff;
   border-bottom: none;
-  text-align: center;
+  text-align: center !important;
   vertical-align: middle;
   padding: 12px 14px;
+}
+
+/* Excel mode: A–E column headers use grey (same as F and beyond) */
+.create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(3),
+.create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(4),
+.create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(5),
+.create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(6),
+.create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(7) {
+  background: #f2f2f2;
+  color: #333;
+  border-color: #d4d4d4;
 }
 
 .create-drt-table th.col-new-total {
@@ -448,10 +508,8 @@
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(6),
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(7),
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(8),
-.create-drt-table.input-style-excel .create-drt-header-row-1 th.col-row-num,
-.create-drt-table.input-style-excel .create-drt-header-row-1 th.col-delete,
 .create-drt-table.input-style-excel .create-drt-header-row-1 th.col-excel-canvas,
-.create-drt-table.input-style-excel .create-drt-header-row-1 th:nth-child(4),
+.create-drt-table.input-style-excel .create-drt-header-row-1 th:nth-child(2),
 .create-drt-table.input-style-excel tbody td:nth-child(1),
 .create-drt-table.input-style-excel tbody td:nth-child(2),
 .create-drt-table.input-style-excel tbody td:nth-child(3),
@@ -465,10 +523,9 @@
 }
 
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(1),
-.create-drt-table.input-style-excel .create-drt-header-row-1 th.col-row-num,
+.create-drt-table.input-style-excel .create-drt-header-row-1 th.col-excel-canvas,
 .create-drt-table.input-style-excel tbody td:nth-child(1) { left: 0; }
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(2),
-.create-drt-table.input-style-excel .create-drt-header-row-1 th.col-delete,
 .create-drt-table.input-style-excel tbody td:nth-child(2) { left: 36px; }
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(3),
 .create-drt-table.input-style-excel tbody td:nth-child(3) { left: 76px; }
@@ -481,8 +538,7 @@
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(7),
 .create-drt-table.input-style-excel tbody td:nth-child(7) { left: 356px; }
 .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(8),
-.create-drt-table.input-style-excel .create-drt-header-row-1 th.col-excel-canvas,
-.create-drt-table.input-style-excel .create-drt-header-row-1 th:nth-child(4),
+.create-drt-table.input-style-excel .create-drt-header-row-1 th:nth-child(2),
 .create-drt-table.input-style-excel tbody td:nth-child(8) {
   left: 426px;
   z-index: 2;
@@ -490,7 +546,7 @@
 }
 
 /* Table mode: only SKU (col 8) visible, freeze it at left: 0 */
-.create-drt-table:not(.input-style-excel) .create-drt-header-row-1 th:nth-child(4),
+.create-drt-table:not(.input-style-excel) .create-drt-header-row-1 th:nth-child(2),
 .create-drt-table:not(.input-style-excel) tbody td:nth-child(8) {
   position: sticky;
   left: 0;
@@ -837,6 +893,16 @@ body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-cell-in
 body[data-theme="night"] .create-drt-table th.col-excel-canvas {
   background-color: #217346;
   color: #fff;
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(3),
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(4),
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(5),
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(6),
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-header-row-0 th:nth-child(7) {
+  background: #2d3748;
+  color: var(--text);
+  border-color: var(--border);
 }
 
 body[data-theme="night"] .create-drt-table.input-style-excel th.col-calc {

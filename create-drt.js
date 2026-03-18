@@ -199,7 +199,7 @@
     delBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>';
     delBtn.addEventListener("click", () => tr.remove());
 
-    const inp = (v, col) => `<td data-cell="${colToLetter(col)}${rowIndex}"><input type="text" class="create-drt-cell-input" value="${v}" data-cell="${colToLetter(col)}${rowIndex}"></td>`;
+    const inp = (v, col, tdClass) => `<td${tdClass ? ` class="${tdClass}"` : ""} data-cell="${colToLetter(col)}${rowIndex}"><input type="text" class="create-drt-cell-input" value="${v}" data-cell="${colToLetter(col)}${rowIndex}"></td>`;
     const ro = (v, col) => `<td class="create-drt-cell-readonly" data-cell="${colToLetter(col)}${rowIndex}"><span class="create-drt-cell-value">${v}</span></td>`;
     const calcCell = (col) => `<td class="col-calc" data-cell="${colToLetter(col)}${rowIndex}"><input type="text" class="create-drt-cell-input create-drt-calc-input" value="" data-formula="" data-cell="${colToLetter(col)}${rowIndex}"></td>`;
     let col = 6;
@@ -215,7 +215,7 @@
       inp(data.contractNumber, col++),
       inp(data.contractEndDate, col++),
       inp(data.orgIdTenantTig, col++),
-      inp(data.skuName, col++),
+      inp(data.skuName, col++, "col-sku-name"),
       inp(data.grp1Curr, col++),
       ...data.grp1Yr.map((v) => inp(v, col++)),
       inp(data.grp2Curr, col++),
@@ -271,6 +271,7 @@
     if (input) input.value = "";
     updateAddRowsButton();
     if (table?.classList.contains("input-style-excel")) setupExcelCellHandlers();
+    if (typeof applyProductFilter === "function") applyProductFilter();
   }
 
   function updateAddRowsButton() {
@@ -297,6 +298,33 @@
   if (addRowsInput) {
     addRowsInput.addEventListener("input", updateAddRowsButton);
     addRowsInput.addEventListener("change", updateAddRowsButton);
+  }
+
+  const productFilter = document.getElementById("productFilter");
+  if (productFilter) {
+    SKU_NAMES.forEach((name) => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      productFilter.appendChild(opt);
+    });
+    const emptyOpt = document.createElement("option");
+    emptyOpt.value = "__empty__";
+    emptyOpt.textContent = "(Empty)";
+    productFilter.appendChild(emptyOpt);
+    productFilter.addEventListener("change", applyProductFilter);
+    applyProductFilter();
+  }
+
+  function applyProductFilter() {
+    if (!tbody || !productFilter) return;
+    const value = (productFilter.value || "").trim();
+    tbody.querySelectorAll("tr[data-id]").forEach((tr) => {
+      const skuCell = tr.querySelector(".col-sku-name");
+      const skuValue = (skuCell?.querySelector("input")?.value || "").trim();
+      const match = !value || (value === "__empty__" ? !skuValue : skuValue === value);
+      tr.classList.toggle("product-filter-hidden", !match);
+    });
   }
 
   function getCellBelow(ref) {
