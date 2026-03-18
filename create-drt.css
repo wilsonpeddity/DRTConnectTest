@@ -1,0 +1,776 @@
+/* Create DRT Page */
+.create-drt-page {
+  min-height: 100vh;
+  background: var(--bg-gradient, #f3f6f9);
+  padding: 20px 24px;
+}
+
+.create-drt-back {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--accent-strong);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.create-drt-back:hover {
+  text-decoration: underline;
+}
+
+.create-drt-header {
+  background: var(--panel, #fff);
+  border: 1px solid var(--border, #e5e8ec);
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 8px;
+}
+
+.create-drt-header-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px 24px;
+}
+
+.create-drt-meta-fields {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 24px;
+  align-items: flex-start;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.create-drt-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 140px;
+  flex: 0 1 auto;
+}
+
+.create-drt-meta-item label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.create-drt-meta-item .create-drt-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text, #1e293b);
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.create-drt-input {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text, #1e293b);
+  min-width: 140px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.create-drt-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft, rgba(43, 120, 173, 0.2));
+}
+
+.create-drt-input::placeholder {
+  color: var(--muted);
+}
+
+.create-drt-input[readonly] {
+  background: rgba(0, 0, 0, 0.02);
+  cursor: default;
+}
+
+.create-drt-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.create-drt-search-wrap .create-drt-search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.create-drt-search-wrap .create-drt-search-input {
+  padding-left: 36px;
+}
+
+.create-drt-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.create-drt-priority-select {
+  font-weight: 600;
+}
+
+.create-drt-priority-select.priority-high {
+  color: var(--danger, #ea001e);
+}
+
+.create-drt-priority-select.priority-medium {
+  color: var(--warn, #fe9339);
+}
+
+.create-drt-priority-select.priority-low {
+  color: var(--good, #2e844a);
+}
+
+.create-drt-result-select.result-won {
+  color: var(--good, #2e844a);
+}
+
+.create-drt-result-select.result-lost {
+  color: #e91e8c;
+}
+
+.create-drt-priority-select option[value="high"] {
+  color: #ea001e;
+}
+
+.create-drt-priority-select option[value="medium"] {
+  color: #fe9339;
+}
+
+.create-drt-priority-select option[value="low"] {
+  color: #2e844a;
+}
+
+
+.create-drt-date-input {
+  min-width: 150px;
+}
+
+.create-drt-summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.create-drt-summary-table {
+  font-size: 0.8rem;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.create-drt-summary-table th,
+.create-drt-summary-table td {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  text-align: center;
+  background: var(--panel);
+}
+
+.create-drt-summary-table thead th {
+  background: rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+.create-drt-summary-table td:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.create-drt-summary-table td:not(:first-child) {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.create-drt-action-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.create-drt-action-btns .primary-button {
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.create-drt-toolbar {
+  margin-bottom: 12px;
+}
+
+.create-drt-style-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-drt-style-toggle .toggle-icon-table {
+  display: none;
+}
+
+.create-drt-add-rows-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.create-drt-add-rows-input {
+  width: 48px;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: center;
+}
+
+.create-drt-add-rows-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.create-drt-add-rows-input::placeholder {
+  color: var(--muted, #94a3b8);
+}
+
+.create-drt-add-row-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-drt-add-row-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.create-drt-add-row-btn:not(:disabled) {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+
+.create-drt-style-toggle.excel-mode .toggle-icon-excel {
+  display: none;
+}
+
+.create-drt-style-toggle.excel-mode .toggle-icon-table {
+  display: inline-flex;
+}
+
+
+.create-drt-table-wrap {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 70vh;
+  min-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.create-drt-table-wrap::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.create-drt-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.create-drt-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.create-drt-table th {
+  background: #2b78ad;
+  color: #fff;
+  padding: 12px 14px;
+  text-align: center;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-right: 1px solid rgba(255,255,255,0.35);
+}
+
+.create-drt-table th:last-child {
+  border-right: none;
+}
+
+.create-drt-table th.col-row-num {
+  width: 36px;
+  min-width: 36px;
+  background: #1e5a8a;
+  font-size: 0.8rem;
+}
+
+.create-drt-table th.col-delete {
+  width: 40px;
+  min-width: 40px;
+  background: #2563a8;
+}
+
+.create-drt-table .create-drt-header-row-0 th.col-row-num,
+.create-drt-table .create-drt-header-row-0 th.col-delete {
+  width: 36px;
+  min-width: 36px;
+  background: #f2f2f2;
+  color: #333;
+  border: 1px solid #d4d4d4;
+}
+
+.create-drt-table .create-drt-header-row-0 th.col-delete {
+  width: 40px;
+  min-width: 40px;
+}
+
+.create-drt-table th.col-alphabet {
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 6px 8px;
+  min-width: 44px;
+  background: #f2f2f2;
+  color: #333;
+  border: 1px solid #d4d4d4;
+}
+
+.create-drt-table th.col-excel-canvas {
+  background-color: #217346;
+  border-bottom: none;
+  text-align: center;
+  vertical-align: middle;
+  padding: 12px 14px;
+}
+
+.create-drt-table th.col-new-total {
+  background: #3d8fc9;
+}
+
+.create-drt-table th.col-readonly {
+  background: #1e5a8a;
+}
+
+.create-drt-table th.col-scroll-start {
+  border-left: 2px dashed rgba(255,255,255,0.5);
+  background: #1e5a8a;
+}
+
+.create-drt-table th.create-drt-group-header {
+  text-align: center;
+  border-left: 1px solid rgba(255,255,255,0.4);
+}
+
+.create-drt-table .create-drt-header-row-2 th {
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.create-drt-table .create-drt-header-row-2 th.create-drt-sub-first {
+  border-left: 1px solid rgba(255,255,255,0.4);
+}
+
+.create-drt-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.create-drt-table tbody tr:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.create-drt-table td.create-drt-cell-readonly {
+  background: rgba(0,0,0,0.04);
+}
+
+.create-drt-table td.create-drt-cell-readonly .create-drt-cell-value {
+  display: block;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  color: var(--text, #1e293b);
+}
+
+/* Table input style */
+.create-drt-table.input-style-modern .create-drt-cell-input {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  width: 100%;
+  min-width: 60px;
+  background: var(--panel);
+}
+
+.create-drt-table.input-style-modern .create-drt-cell-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Row number column - only visible in Excel mode */
+.create-drt-table:not(.input-style-excel) th.col-row-num,
+.create-drt-table:not(.input-style-excel) td.col-row-num {
+  display: none;
+}
+
+.create-drt-table.input-style-excel td.col-row-num {
+  background: #f2f2f2;
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid #d4d4d4;
+}
+
+/* Alphabet row - only visible in Excel mode */
+.create-drt-table:not(.input-style-excel) tr.create-drt-alphabet-row {
+  display: none;
+}
+
+/* Excel Canvas - only visible in Excel mode */
+.create-drt-table:not(.input-style-excel) th.col-excel-canvas {
+  display: none;
+}
+
+/* Calc columns - only visible in Excel mode */
+.create-drt-table:not(.input-style-excel) th.col-calc,
+.create-drt-table:not(.input-style-excel) td.col-calc {
+  display: none;
+}
+
+.create-drt-table.input-style-excel th.col-calc {
+  background: #217346;
+  color: #fff;
+  font-weight: 600;
+  min-width: 70px;
+  border-top: none;
+  border-bottom: 1px solid rgba(255,255,255,0.35);
+  border-left: none;
+  border-right: none;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.create-drt-table.input-style-excel th.col-calc.create-drt-sub-first {
+  border-left: 1px solid rgba(255,255,255,0.35);
+}
+
+.create-drt-table thead tr.create-drt-header-row-2 th.col-calc:nth-child(5) {
+  border-right: 1px solid rgba(255,255,255,0.35);
+}
+
+.create-drt-table.input-style-excel td.col-calc {
+  background: #fff;
+  border-top: none;
+  border-bottom: 1px solid #d4d4d4;
+  border-left: none;
+  border-right: 1px solid #d4d4d4;
+}
+
+.create-drt-table.input-style-excel tbody tr:first-child td.col-calc {
+  border-top: 1px solid #d4d4d4;
+}
+
+.create-drt-table.input-style-excel td.col-delete + td.col-calc {
+  border-left: 1px solid #d4d4d4;
+}
+
+.create-drt-table.input-style-excel tr td.col-calc:nth-child(7) {
+  border-right: 1px solid #d4d4d4;
+}
+
+.create-drt-table.input-style-excel td.col-calc .create-drt-cell-input {
+  background: transparent;
+  font-family: "Consolas", "Courier New", monospace;
+}
+
+/* Formula selection highlight */
+.create-drt-table.input-style-excel td.formula-selection-highlight {
+  background: rgba(33, 115, 70, 0.2) !important;
+  outline: 2px solid #217346;
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+/* Formula selection mode: cells act as selection targets, not editable */
+.create-drt-page.formula-selection-mode .create-drt-table.input-style-excel td[data-cell] {
+  cursor: cell;
+}
+.create-drt-page.formula-selection-mode .create-drt-table.input-style-excel td[data-cell] .create-drt-cell-input,
+.create-drt-page.formula-selection-mode .create-drt-table.input-style-excel td[data-cell] .create-drt-cell-value {
+  pointer-events: none;
+  cursor: cell;
+}
+
+/* Excel formula bar */
+.create-drt-excel-bar {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.create-drt-page .create-drt-excel-bar {
+  display: none;
+  margin-bottom: 12px;
+}
+
+.create-drt-page.excel-mode-active .create-drt-excel-bar {
+  display: flex;
+}
+
+.create-drt-formula-label {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.9rem;
+  min-width: 24px;
+}
+
+.create-drt-formula-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 0.9rem;
+}
+
+/* Excel input style - spreadsheet-like grid */
+.create-drt-table.input-style-excel {
+  font-family: "Segoe UI", Calibri, Arial, sans-serif;
+}
+
+.create-drt-table.input-style-excel td {
+  border: 1px solid #d4d4d4;
+  padding: 0;
+}
+
+.create-drt-table.input-style-excel .create-drt-cell-input {
+  border: none;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  width: 100%;
+  min-width: 60px;
+  background: transparent;
+  font-family: inherit;
+}
+
+.create-drt-table.input-style-excel .create-drt-cell-input:focus {
+  outline: 2px solid #217346;
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.create-drt-table.input-style-excel td.create-drt-cell-readonly {
+  background: #f9f9f9;
+  border: 1px solid #d4d4d4;
+}
+
+.create-drt-table.input-style-excel td.create-drt-cell-readonly .create-drt-cell-value {
+  padding: 4px 8px;
+}
+
+.create-drt-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.create-drt-delete-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+/* Create DRT toolbar layout */
+.create-drt-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.create-drt-theme-toggle {
+  width: auto;
+}
+
+/* Night mode - Create DRT */
+body[data-theme="night"] .create-drt-input,
+body[data-theme="night"] .create-drt-add-rows-input {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body[data-theme="night"] .create-drt-priority-select.priority-high {
+  color: #f85149;
+}
+
+body[data-theme="night"] .create-drt-priority-select.priority-medium {
+  color: #d29922;
+}
+
+body[data-theme="night"] .create-drt-priority-select.priority-low {
+  color: #3fb950;
+}
+
+body[data-theme="night"] .create-drt-result-select.result-won {
+  color: #3fb950;
+}
+
+body[data-theme="night"] .create-drt-result-select.result-lost {
+  color: #e91e8c;
+}
+
+body[data-theme="night"] .create-drt-priority-select option[value="high"] {
+  color: #f85149;
+}
+
+body[data-theme="night"] .create-drt-priority-select option[value="medium"] {
+  color: #d29922;
+}
+
+body[data-theme="night"] .create-drt-priority-select option[value="low"] {
+  color: #3fb950;
+}
+
+body[data-theme="night"] .create-drt-meta-item .create-drt-value {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border);
+}
+
+body[data-theme="night"] .create-drt-table th {
+  background: #1e3a5f;
+}
+
+body[data-theme="night"] .create-drt-table th.col-delete {
+  background: #152a45;
+}
+
+body[data-theme="night"] .create-drt-table th.col-new-total {
+  background: #2563a8;
+}
+
+body[data-theme="night"] .create-drt-table th.col-readonly,
+body[data-theme="night"] .create-drt-table th.col-scroll-start {
+  background: #0f2744;
+}
+
+body[data-theme="night"] .create-drt-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+body[data-theme="night"] .create-drt-table td.create-drt-cell-readonly {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body[data-theme="night"] .create-drt-table td.create-drt-cell-readonly .create-drt-cell-value {
+  color: var(--text);
+}
+
+body[data-theme="night"] .create-drt-delete-btn {
+  color: var(--muted);
+}
+
+body[data-theme="night"] .create-drt-delete-btn:hover {
+  background: rgba(248, 81, 73, 0.2);
+  color: #f85149;
+}
+
+body[data-theme="night"] .create-drt-table-wrap::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-cell-input {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-cell-input:focus {
+  outline-color: var(--accent);
+}
+
+body[data-theme="night"] .create-drt-table th.col-excel-canvas {
+  background-color: #217346;
+  color: #fff;
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel th.col-calc {
+  background: #217346;
+  color: #fff;
+  border-color: rgba(255,255,255,0.35);
+}
+
+body[data-theme="night"] .create-drt-table .create-drt-header-row-0 th.col-row-num,
+body[data-theme="night"] .create-drt-table .create-drt-header-row-0 th.col-delete {
+  background: #2d3748;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+body[data-theme="night"] .create-drt-table th.col-alphabet {
+  background: #2d3748;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel td.col-calc {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--border);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel td.col-row-num {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel td.create-drt-cell-readonly {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel td.formula-selection-highlight {
+  background: rgba(33, 115, 70, 0.35) !important;
+  outline-color: #217346;
+}

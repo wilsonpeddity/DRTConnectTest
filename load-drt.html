@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Load DRT - DRT Connect</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="create-drt.css">
+  <link rel="stylesheet" href="load-drt.css">
+</head>
+<body data-theme="day">
+  <div class="create-drt-page">
+    <header class="create-drt-header">
+      <a href="index.html" class="create-drt-back">← Back</a>
+      <div class="create-drt-header-row">
+        <div class="create-drt-meta-fields">
+          <div class="create-drt-meta-item">
+            <label>Account Name</label>
+            <span id="loadDrtAccountName" class="create-drt-value">Pepsi Co.</span>
+          </div>
+          <div class="create-drt-meta-item">
+            <label for="loadDrtPriority">Priority</label>
+            <select id="loadDrtPriority" class="create-drt-input create-drt-select create-drt-priority-select">
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low" selected>Low</option>
+            </select>
+          </div>
+          <div class="create-drt-meta-item">
+            <label for="loadDrtCreatedDate">Created Date</label>
+            <input id="loadDrtCreatedDate" type="text" class="create-drt-input" readonly>
+          </div>
+          <div class="create-drt-meta-item">
+            <label for="loadDrtTargetDate">Target Date</label>
+            <input id="loadDrtTargetDate" type="text" class="create-drt-input" readonly>
+          </div>
+          <div class="create-drt-meta-item">
+            <label>Owner</label>
+            <span class="create-drt-value">Wilson Peddity</span>
+          </div>
+          <div class="create-drt-meta-item">
+            <label>DRT ID</label>
+            <span id="loadDrtId" class="create-drt-value">—</span>
+          </div>
+          <div class="create-drt-meta-item">
+            <label for="loadDrtAssignedTo">Assign to</label>
+            <div class="create-drt-search-wrap">
+              <span class="create-drt-search-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              </span>
+              <input id="loadDrtAssignedTo" type="text" class="create-drt-input create-drt-search-input" placeholder="Search..." autocomplete="off">
+            </div>
+          </div>
+          <div class="create-drt-meta-item load-drt-result-wrap">
+            <label for="loadDrtResult">Result</label>
+            <select id="loadDrtResult" class="create-drt-input create-drt-select create-drt-result-select">
+              <option value="">—</option>
+              <option value="won">Won</option>
+              <option value="lost">Lost</option>
+            </select>
+            <button type="button" class="load-drt-close-btn" id="loadDrtCloseBtn" title="Close" disabled>Close</button>
+          </div>
+        </div>
+        <div class="create-drt-summary-section">
+          <table class="create-drt-summary-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Current</th>
+                <th>Year 1</th>
+                <th>Year 2</th>
+                <th>Year 3</th>
+                <th>Year 4</th>
+                <th>Year 5</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total ACV</td>
+                <td>$125,000</td>
+                <td>$132,000</td>
+                <td>$139,000</td>
+                <td>$146,000</td>
+                <td>$153,000</td>
+                <td>$160,000</td>
+                <td>$995,000</td>
+              </tr>
+              <tr>
+                <td>Total NNAOV</td>
+                <td>$98,500</td>
+                <td>$104,200</td>
+                <td>$110,100</td>
+                <td>$116,200</td>
+                <td>$122,500</td>
+                <td>$129,000</td>
+                <td>$780,500</td>
+              </tr>
+              <tr>
+                <td>Pipeline Health</td>
+                <td>$112,000</td>
+                <td>$118,500</td>
+                <td>$125,200</td>
+                <td>$131,800</td>
+                <td>$138,400</td>
+                <td>$145,100</td>
+                <td>$771,000</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="create-drt-action-btns">
+            <button type="button" class="primary-button">Generate SKU and AOV Data</button>
+            <button type="button" class="primary-button">Generate Data File for Upload</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="create-drt-excel-bar" id="excelFormulaBar" aria-hidden="true">
+      <label class="create-drt-formula-label" for="excelFormulaInput">fx</label>
+      <input type="text" id="excelFormulaInput" class="create-drt-formula-input" placeholder="Enter formula (e.g. =SUM(A1:A5)) — click cells to insert references" autocomplete="off">
+    </div>
+    <div class="create-drt-toolbar">
+      <button type="button" class="theme-toggle create-drt-theme-toggle" id="createDrtThemeToggle" aria-label="Switch to night theme">
+        <span class="theme-toggle-track">
+          <span class="theme-icon sun-moon">
+            <span class="sun-core"></span>
+            <span class="moon-cut"></span>
+            <span class="ray ray-1"></span>
+            <span class="ray ray-2"></span>
+            <span class="ray ray-3"></span>
+            <span class="ray ray-4"></span>
+          </span>
+        </span>
+        <span class="theme-label">Day Mode</span>
+      </button>
+      <button type="button" class="primary-button create-drt-style-toggle" id="inputStyleToggle" title="Toggle input style">
+        <span class="toggle-icon-excel" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h2"/><path d="M8 17h2"/><path d="M14 13h2"/><path d="M14 17h2"/></svg>
+        </span>
+        <span class="toggle-icon-table" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        </span>
+        <span class="toggle-label">Excel</span>
+      </button>
+      <div class="create-drt-add-rows-wrap">
+        <input type="number" id="addRowsCount" class="create-drt-add-rows-input" min="1" placeholder="#" title="Number of rows to add" aria-label="Number of rows to add">
+        <button type="button" class="ghost-button create-drt-add-row-btn" id="addRowBtn" title="Add rows" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Add Rows</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="create-drt-table-wrap">
+      <table class="create-drt-table" id="createDrtTable">
+        <thead>
+          <tr class="create-drt-header-row-0 create-drt-alphabet-row">
+            <th class="col-row-num col-alphabet"></th>
+            <th class="col-delete col-alphabet"></th>
+            <th class="col-alphabet">A</th><th class="col-alphabet">B</th><th class="col-alphabet">C</th><th class="col-alphabet">D</th><th class="col-alphabet">E</th>
+            <th class="col-alphabet">F</th><th class="col-alphabet">G</th><th class="col-alphabet">H</th><th class="col-alphabet">I</th><th class="col-alphabet">J</th><th class="col-alphabet">K</th><th class="col-alphabet">L</th><th class="col-alphabet">M</th><th class="col-alphabet">N</th>
+            <th class="col-alphabet">O</th><th class="col-alphabet">P</th><th class="col-alphabet">Q</th><th class="col-alphabet">R</th><th class="col-alphabet">S</th><th class="col-alphabet">T</th>
+            <th class="col-alphabet">U</th><th class="col-alphabet">V</th><th class="col-alphabet">W</th><th class="col-alphabet">X</th><th class="col-alphabet">Y</th><th class="col-alphabet">Z</th>
+            <th class="col-alphabet">AA</th><th class="col-alphabet">AB</th><th class="col-alphabet">AC</th><th class="col-alphabet">AD</th><th class="col-alphabet">AE</th><th class="col-alphabet">AF</th>
+            <th class="col-alphabet">AG</th><th class="col-alphabet">AH</th><th class="col-alphabet">AI</th><th class="col-alphabet">AJ</th><th class="col-alphabet">AK</th><th class="col-alphabet">AL</th><th class="col-alphabet">AM</th><th class="col-alphabet">AN</th><th class="col-alphabet">AO</th><th class="col-alphabet">AP</th><th class="col-alphabet">AQ</th>
+          </tr>
+          <tr class="create-drt-header-row-1">
+            <th class="col-row-num" rowspan="2"></th>
+            <th class="col-delete" rowspan="2"></th>
+            <th colspan="5" rowspan="2" class="create-drt-group-header col-excel-canvas">Excel Canvas</th>
+            <th rowspan="2" class="col-readonly">SKU</th>
+            <th rowspan="2">Additional Comment</th>
+            <th rowspan="2">Apply SELA Discount</th>
+            <th rowspan="2">Capped/Uncapped</th>
+            <th rowspan="2">SELA/Std Quote</th>
+            <th rowspan="2">Contract Number</th>
+            <th rowspan="2">Contract End Date</th>
+            <th rowspan="2">OrgID/Tenant/TIG</th>
+            <th rowspan="2">SKU Name</th>
+            <th colspan="6" class="create-drt-group-header">Number of Subscriptions</th>
+            <th colspan="6" class="create-drt-group-header">Monthly Unit Price</th>
+            <th colspan="6" class="create-drt-group-header col-readonly">Total Annual Price</th>
+            <th rowspan="2" class="col-new-total col-readonly">New Total</th>
+            <th rowspan="2" class="col-scroll-start">Addon Unit Price (monthly)</th>
+            <th rowspan="2" class="col-readonly">Cloud of SKU</th>
+            <th rowspan="2" class="col-readonly">Eligible Signature Success Add-On Fees</th>
+            <th rowspan="2" class="col-readonly">List Price (Monthly)</th>
+            <th rowspan="2" class="col-readonly">Exit Discount</th>
+            <th rowspan="2">Include in % Based Pricing? (Refer to Note 5)</th>
+            <th rowspan="2">Exit Color Guidance*</th>
+            <th rowspan="2">Exit Approval Level*</th>
+            <th rowspan="2" class="col-readonly">SELA Eligibility</th>
+            <th rowspan="2" class="col-readonly">AWS Eligibility</th>
+          </tr>
+          <tr class="create-drt-header-row-2">
+            <th class="create-drt-sub-first">Current</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th>
+            <th class="create-drt-sub-first">Current</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th>
+            <th class="create-drt-sub-first col-readonly">Current</th><th class="col-readonly">Year 1</th><th class="col-readonly">Year 2</th><th class="col-readonly">Year 3</th><th class="col-readonly">Year 4</th><th class="col-readonly">Year 5</th>
+          </tr>
+        </thead>
+        <tbody id="createDrtBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    window.DRT_QUEUE_DATA = [
+      {"id":"DRT-1042","priority":"High","account":"Apex Systems","aov":"$125K","owner":"Maya Chen","createdTimestamp":"2025-03-18T10:30:00","lastModified":"1 hour ago","status":"Pending Approval","assigned":true,"timeToTarget":"Today"},
+      {"id":"DRT-1041","priority":"High","account":"TechCorp Inc","aov":"$89K","owner":"James Wilson","createdTimestamp":"2025-03-18T08:15:00","lastModified":"2 hours ago","status":"Pending Approval","assigned":true,"timeToTarget":"1 day left"},
+      {"id":"DRT-1040","priority":"High","account":"Global Solutions","aov":"$210K","owner":"Sarah Lee","createdTimestamp":"2025-03-17T14:00:00","lastModified":"Yesterday","status":"WIP","assigned":true,"timeToTarget":"Overdue"},
+      {"id":"DRT-1035","priority":"Medium","account":"Northstar Health","aov":"$67K","owner":"Wilson Peddity","createdTimestamp":"2025-03-16T09:45:00","lastModified":"Today","status":"WIP","assigned":true,"timeToTarget":"2 days left"},
+      {"id":"DRT-1038","priority":"Medium","account":"Vertex Manufacturing","aov":"$156K","owner":"William Peddity","createdTimestamp":"2025-03-15T11:20:00","lastModified":"Today","status":"WIP","assigned":true,"timeToTarget":"3 days left"},
+      {"id":"DRT-1037","priority":"Low","account":"Brightline Media","aov":"$42K","owner":"William Peddity","createdTimestamp":"2025-03-14T16:30:00","lastModified":"Yesterday","status":"WIP","assigned":true,"timeToTarget":"5 days left"},
+      {"id":"DRT-1028","priority":"High","account":"Brightline Media","aov":"$98K","owner":"Noor Patel","createdTimestamp":"2025-03-13T13:15:00","lastModified":"Yesterday","status":"Pending Approval","assigned":true,"timeToTarget":"4 days left"},
+      {"id":"DRT-1032","priority":"Medium","account":"Summit Partners","aov":"$178K","owner":"Noor Patel","createdTimestamp":"2025-03-12T10:00:00","lastModified":"Mar 12","status":"Pending Approval","assigned":true,"timeToTarget":"6 days left"},
+      {"id":"DRT-1025","priority":"Low","account":"Horizon Labs","aov":"$55K","owner":"Maya Chen","createdTimestamp":"2025-03-11T14:45:00","lastModified":"Mar 11","status":"WIP","assigned":true,"timeToTarget":"7 days left"},
+      {"id":"DRT-1019","priority":"Low","account":"Vertex Manufacturing","aov":"$92K","owner":"Ishan Rao","createdTimestamp":"2025-03-03T09:30:00","lastModified":"Mar 12","status":"Closed Won","assigned":false,"timeToTarget":"—"},
+      {"id":"DRT-1015","priority":"Medium","account":"Apex Systems","aov":"$134K","owner":"James Wilson","createdTimestamp":"2025-03-01T11:00:00","lastModified":"Mar 10","status":"Closed Lost","assigned":false,"timeToTarget":"—"},
+      {"id":"DRT-1012","priority":"High","account":"TechCorp Inc","aov":"$245K","owner":"Sarah Lee","createdTimestamp":"2025-02-28T15:20:00","lastModified":"Mar 08","status":"Closed Won","assigned":false,"timeToTarget":"—"}
+    ];
+  </script>
+  <script src="create-drt.js"></script>
+  <script src="load-drt.js"></script>
+</body>
+</html>
