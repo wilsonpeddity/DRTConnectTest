@@ -339,6 +339,13 @@
   background: #2563a8;
 }
 
+.create-drt-table thead th.col-row-num,
+.create-drt-table thead th.col-delete {
+  background: #f2f2f2;
+  color: #333;
+  border: 1px solid #d4d4d4;
+}
+
 .create-drt-table .create-drt-header-row-0 th.col-row-num,
 .create-drt-table .create-drt-header-row-0 th.col-delete {
   width: 36px;
@@ -689,6 +696,13 @@ body[data-theme="night"] .create-drt-table th.col-delete {
   background: #152a45;
 }
 
+body[data-theme="night"] .create-drt-table thead th.col-row-num,
+body[data-theme="night"] .create-drt-table thead th.col-delete {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  border-color: var(--border);
+}
+
 body[data-theme="night"] .create-drt-table th.col-new-total {
   background: #2563a8;
 }
@@ -710,6 +724,19 @@ body[data-theme="night"] .create-drt-table td.create-drt-cell-readonly .create-d
   color: var(--text);
 }
 
+body[data-theme="night"] .create-drt-table.input-style-modern .create-drt-cell-input {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-modern .create-drt-cell-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-modern td.create-drt-cell-readonly .create-drt-cell-value {
+  color: #fff;
+}
+
 body[data-theme="night"] .create-drt-delete-btn {
   color: var(--muted);
 }
@@ -724,8 +751,13 @@ body[data-theme="night"] .create-drt-table-wrap::-webkit-scrollbar-thumb {
 }
 
 body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-cell-input {
+  color: #fff;
   border-bottom-color: rgba(255, 255, 255, 0.3);
   border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-cell-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 body[data-theme="night"] .create-drt-table.input-style-excel .create-drt-cell-input:focus {
@@ -768,6 +800,10 @@ body[data-theme="night"] .create-drt-table.input-style-excel td.col-row-num {
 
 body[data-theme="night"] .create-drt-table.input-style-excel td.create-drt-cell-readonly {
   background: rgba(255, 255, 255, 0.02);
+}
+
+body[data-theme="night"] .create-drt-table.input-style-excel td.create-drt-cell-readonly .create-drt-cell-value {
+  color: #fff;
 }
 
 body[data-theme="night"] .create-drt-table.input-style-excel td.formula-selection-highlight {
