@@ -1358,6 +1358,76 @@ body[data-theme="night"] .time-to-target.time-overdue {
   color: #f87171;
 }
 
+/* DRT Queue row actions menu */
+.table-wrap th.col-actions,
+.table-wrap td.col-actions {
+  width: 44px;
+  padding: 4px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.row-menu-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.row-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.row-menu-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text);
+}
+
+.row-menu-btn svg {
+  flex-shrink: 0;
+}
+
+.row-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  min-width: 140px;
+  padding: 4px 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--modal-shadow);
+  z-index: 20;
+}
+
+.row-menu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.row-menu-item:hover {
+  background: var(--hover-bg);
+}
+
 body[data-theme="night"] .time-to-target.time-na {
   color: #64748b;
 }

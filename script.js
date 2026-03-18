@@ -195,6 +195,28 @@ function formatCreatedDate(createdTimestamp) {
   return `${mon} ${day}, ${time}`;
 }
 
+function getNextDrtId() {
+  const data = window.DRT_QUEUE_DATA || [];
+  let max = 0;
+  data.forEach((r) => {
+    const n = parseInt((r.id || "").replace(/\D/g, ""), 10) || 0;
+    if (n > max) max = n;
+  });
+  return "DRT-" + (max + 1);
+}
+
+function duplicateDrt(row) {
+  const data = window.DRT_QUEUE_DATA || [];
+  const copy = { ...row };
+  copy.id = getNextDrtId();
+  copy.createdTimestamp = new Date().toISOString();
+  copy.lastModified = "Just now";
+  copy.status = row.status === "Closed Won" || row.status === "Closed Lost" ? "WIP" : row.status;
+  copy.timeToTarget = row.status === "Closed Won" || row.status === "Closed Lost" ? "—" : row.timeToTarget;
+  data.unshift(copy);
+  renderTable();
+}
+
 function renderRow(row) {
   const tr = document.createElement("tr");
   tr.dataset.id = row.id;
@@ -212,9 +234,39 @@ function renderRow(row) {
     <td>${row.lastModified}</td>
     <td><span class="time-to-target ${timeClass}">${timeToTarget}</span></td>
     <td>${row.status}</td>
+    <td class="col-actions">
+      <div class="row-menu-wrap">
+        <button type="button" class="row-menu-btn" aria-label="Row actions" aria-haspopup="true" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+        <div class="row-menu-dropdown" role="menu" hidden>
+          <button type="button" class="row-menu-item" data-action="duplicate" role="menuitem">Duplicate</button>
+        </div>
+      </div>
+    </td>
   `;
-  tr.addEventListener("click", () => {
+  tr.addEventListener("click", (e) => {
+    if (e.target.closest(".row-menu-wrap")) return;
     window.location.href = "load-drt.html?id=" + encodeURIComponent(row.id);
+  });
+  const menuBtn = tr.querySelector(".row-menu-btn");
+  const dropdown = tr.querySelector(".row-menu-dropdown");
+  const duplicateBtn = tr.querySelector('[data-action="duplicate"]');
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isOpen = !dropdown.hidden;
+    document.querySelectorAll(".row-menu-dropdown").forEach((d) => { d.hidden = true; });
+    document.querySelectorAll(".row-menu-btn").forEach((b) => b.setAttribute("aria-expanded", "false"));
+    if (!isOpen) {
+      dropdown.hidden = false;
+      menuBtn.setAttribute("aria-expanded", "true");
+    }
+  });
+  duplicateBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown.hidden = true;
+    menuBtn.setAttribute("aria-expanded", "false");
+    duplicateDrt(row);
   });
   return tr;
 }
@@ -561,3 +613,8 @@ tabPills.forEach((pill) => {
 renderTable();
 updateTabCounts();
 renderUnreadUpdates();
+
+document.addEventListener("click", () => {
+  document.querySelectorAll(".row-menu-dropdown").forEach((d) => { d.hidden = true; });
+  document.querySelectorAll(".row-menu-btn").forEach((b) => b.setAttribute("aria-expanded", "false"));
+});

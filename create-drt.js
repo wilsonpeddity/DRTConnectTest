@@ -265,7 +265,8 @@
     const count = input ? Math.max(1, parseInt(input.value, 10) || 1) : 1;
     for (let i = 0; i < count; i++) {
       const nextId = getNextRowIndex();
-      tbody.appendChild(renderRow(generateBlankRow(nextId), nextId));
+      const tr = renderRow(generateBlankRow(nextId), nextId);
+      tbody.insertBefore(tr, tbody.firstChild);
     }
     if (input) input.value = "";
     updateAddRowsButton();
