@@ -248,6 +248,11 @@ function getUnreadUpdates() {
 function renderUnreadUpdates() {
   if (!unreadUpdatesList) return;
   const data = getUnreadUpdates();
+  const countEl = document.getElementById("unreadUpdatesCount");
+  if (countEl) {
+    countEl.textContent = data.length > 0 ? ` (${data.length})` : "";
+    countEl.setAttribute("aria-label", data.length > 0 ? `${data.length} unread` : "No unread");
+  }
   unreadUpdatesList.innerHTML = "";
   data.forEach((update) => {
     const li = document.createElement("li");
