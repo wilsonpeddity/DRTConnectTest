@@ -6,225 +6,691 @@
   <title>Load DRT - DRT Connect</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="create-drt.css">
-  <link rel="stylesheet" href="load-drt.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" type="text/css">
 </head>
-<body data-theme="day">
+<body class="create-drt-screen" data-theme="day">
+  <span id="loadDrtId" hidden></span>
   <div class="create-drt-page">
     <div class="create-drt-sticky-top">
-    <header class="create-drt-header">
-      <a href="index.html" class="create-drt-back">← Back</a>
-      <div class="create-drt-header-row">
-        <div class="create-drt-meta-fields">
-          <div class="create-drt-meta-item">
-            <label>Account Name</label>
-            <span id="loadDrtAccountName" class="create-drt-value">Pepsi Co.</span>
-          </div>
-          <div class="create-drt-meta-item">
-            <label for="loadDrtPriority">Priority</label>
-            <select id="loadDrtPriority" class="create-drt-input create-drt-select create-drt-priority-select">
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low" selected>Low</option>
-            </select>
-          </div>
-          <div class="create-drt-meta-item">
-            <label for="loadDrtCreatedDate">Created Date</label>
-            <input id="loadDrtCreatedDate" type="text" class="create-drt-input" readonly>
-          </div>
-          <div class="create-drt-meta-item">
-            <label for="loadDrtTargetDate">Target Date</label>
-            <input id="loadDrtTargetDate" type="text" class="create-drt-input" readonly>
-          </div>
-          <div class="create-drt-meta-item">
-            <label>Owner</label>
-            <span class="create-drt-value">Wilson Peddity</span>
-          </div>
-          <div class="create-drt-meta-item">
-            <label>DRT ID</label>
-            <span id="loadDrtId" class="create-drt-value">—</span>
-          </div>
-          <div class="create-drt-meta-item">
-            <label for="loadDrtAssignedTo">Assign to</label>
-            <div class="create-drt-search-wrap">
-              <span class="create-drt-search-icon" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-              </span>
-              <input id="loadDrtAssignedTo" type="text" class="create-drt-input create-drt-search-input" placeholder="Search..." autocomplete="off">
+      <header class="create-drt-header">
+        <div class="create-drt-header-shell">
+
+          <!-- Top bar: navigation + ID + collapsed metrics + toggle -->
+          <div class="create-drt-header-top">
+            <div class="create-drt-header-top-left">
+              <a href="index.html" class="create-drt-back">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back
+              </a>
+              <div class="create-drt-id-badge">
+                <span class="create-drt-id-label">ID</span>
+                <span class="create-drt-id-value" id="createDrtId">—</span>
+              </div>
+            </div>
+            <div class="create-drt-header-top-actions">
+              <div class="create-drt-collapsed-metrics">
+                <div class="create-drt-collapsed-metric" data-metric="aov">
+                  <span class="create-drt-collapsed-metric-label">AOV</span>
+                  <span class="create-drt-collapsed-metric-value">—</span>
+                  <span class="create-drt-collapsed-metric-term">Year 1</span>
+                </div>
+                <div class="create-drt-collapsed-metric" data-metric="acv">
+                  <span class="create-drt-collapsed-metric-label">ACV</span>
+                  <span class="create-drt-collapsed-metric-value">—</span>
+                  <span class="create-drt-collapsed-metric-term">Year 1</span>
+                </div>
+                <div class="create-drt-collapsed-metric" data-metric="nnaov">
+                  <span class="create-drt-collapsed-metric-label">NNAOV</span>
+                  <span class="create-drt-collapsed-metric-value">—</span>
+                  <span class="create-drt-collapsed-metric-term">Year 1</span>
+                </div>
+                <div class="create-drt-collapsed-metric" data-metric="pipeline">
+                  <span class="create-drt-collapsed-metric-label">Health</span>
+                  <span class="create-drt-collapsed-metric-value">—</span>
+                  <span class="create-drt-collapsed-metric-term">Year 1</span>
+                </div>
+              </div>
+              <button type="button" class="create-drt-header-toggle" id="createDrtHeaderToggle" aria-expanded="true">
+                <svg class="toggle-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+                <span class="toggle-label">Hide Details</span>
+              </button>
             </div>
           </div>
-          <div class="create-drt-meta-item load-drt-result-wrap">
-            <label for="loadDrtResult">Result</label>
-            <select id="loadDrtResult" class="create-drt-input create-drt-select create-drt-result-select">
-              <option value="">—</option>
-              <option value="won">Won</option>
-              <option value="lost">Lost</option>
-            </select>
-            <button type="button" class="load-drt-close-btn" id="loadDrtCloseBtn" title="Close" disabled>Close</button>
+
+          <!-- Expandable details grid -->
+          <div class="create-drt-header-grid" id="createDrtHeaderDetails">
+
+            <!-- LEFT: form fields -->
+            <section class="create-drt-meta-card">
+              <div class="create-drt-meta-card-header">
+                <span class="create-drt-meta-card-title">Deal Information</span>
+              </div>
+
+              <!-- Row 1: Account Name | Country | Currency -->
+              <div class="create-drt-form-section">
+                <div class="create-drt-meta-fields create-drt-meta-fields--row1">
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtAccountName" class="create-drt-label-required">Account Name</label>
+                    <div class="create-drt-search-wrap">
+                      <span class="create-drt-search-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                      </span>
+                      <input id="createDrtAccountName" type="text" class="create-drt-input create-drt-search-input" placeholder="Search account..." autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtCountry" class="create-drt-label-required">Country</label>
+                    <select id="createDrtCountry" class="create-drt-input create-drt-select">
+                      <option value="">— Select —</option>
+                      <option>Australia</option>
+                      <option>Brazil</option>
+                      <option>Canada</option>
+                      <option>China</option>
+                      <option>France</option>
+                      <option>Germany</option>
+                      <option>India</option>
+                      <option>Italy</option>
+                      <option>Japan</option>
+                      <option>Mexico</option>
+                      <option>Netherlands</option>
+                      <option>Singapore</option>
+                      <option>South Korea</option>
+                      <option>Spain</option>
+                      <option>Sweden</option>
+                      <option>Switzerland</option>
+                      <option>United Kingdom</option>
+                      <option selected>United States</option>
+                    </select>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtCurrency" class="create-drt-label-required">Currency</label>
+                    <select id="createDrtCurrency" class="create-drt-input create-drt-select">
+                      <option>A$ AUD</option>
+                      <option>R$ BRL</option>
+                      <option>C$ CAD</option>
+                      <option>€ EUR</option>
+                      <option>£ GBP</option>
+                      <option>₹ INR</option>
+                      <option>¥ JPY</option>
+                      <option>kr SEK</option>
+                      <option selected>$ USD</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 2: Term | Priority | Target Close Date -->
+              <div class="create-drt-form-section">
+                <div class="create-drt-meta-fields create-drt-meta-fields--row2">
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtTerm" class="create-drt-label-required">Term (Yrs)</label>
+                    <select id="createDrtTerm" class="create-drt-input create-drt-select">
+                      <option selected>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label id="createDrtPriorityLabel" class="create-drt-label-required">Priority</label>
+                    <div class="create-drt-priority-picker" id="createDrtPriorityPicker"
+                         tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                         aria-labelledby="createDrtPriorityLabel">
+                      <span class="create-drt-priority-pill create-drt-priority-pill--low" id="createDrtPriorityDisplay">
+                        <span class="create-drt-priority-dot"></span>
+                        <span class="create-drt-priority-text">Low</span>
+                      </span>
+                      <svg class="create-drt-priority-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                      <ul class="create-drt-priority-dropdown" role="listbox" aria-labelledby="createDrtPriorityLabel">
+                        <li class="create-drt-priority-option" data-value="low" role="option" tabindex="-1">
+                          <span class="create-drt-priority-pill create-drt-priority-pill--low">
+                            <span class="create-drt-priority-dot"></span>
+                            <span>Low</span>
+                          </span>
+                        </li>
+                        <li class="create-drt-priority-option" data-value="medium" role="option" tabindex="-1">
+                          <span class="create-drt-priority-pill create-drt-priority-pill--medium">
+                            <span class="create-drt-priority-dot"></span>
+                            <span>Medium</span>
+                          </span>
+                        </li>
+                        <li class="create-drt-priority-option" data-value="high" role="option" tabindex="-1">
+                          <span class="create-drt-priority-pill create-drt-priority-pill--high">
+                            <span class="create-drt-priority-dot"></span>
+                            <span>High</span>
+                          </span>
+                        </li>
+                      </ul>
+                      <input type="hidden" id="createDrtPriority" name="priority" value="low">
+                    </div>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtTargetDate">Target Close Date</label>
+                    <input id="createDrtTargetDate" type="date" class="create-drt-input create-drt-date-input">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 3: 3-col × 2-row grid
+                   Sub-row 1: Created Date | Owner       | Assigned To
+                   Sub-row 2: Modified Date | Assign To  | (empty)      -->
+              <div class="create-drt-form-section">
+                <div class="create-drt-meta-fields create-drt-meta-fields--row3">
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtCreatedDate">Created Date</label>
+                    <input id="createDrtCreatedDate" type="text" class="create-drt-input" placeholder="—" readonly>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label>Owner</label>
+                    <span class="create-drt-value create-drt-owner-chip" data-owner-chip>Wilson Peddity</span>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtAssignedTo">Assigned To</label>
+                    <input id="createDrtAssignedTo" type="text" class="create-drt-input" placeholder="—" readonly>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label for="createDrtModifiedDate">Modified Date</label>
+                    <input id="createDrtModifiedDate" type="text" class="create-drt-input" placeholder="—" readonly>
+                  </div>
+                  <div class="create-drt-meta-item create-drt-meta-item--assign">
+                    <label for="createDrtAssignTo">Assign To</label>
+                    <div class="create-drt-search-wrap">
+                      <span class="create-drt-search-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                      </span>
+                      <input id="createDrtAssignTo" type="text" class="create-drt-input create-drt-search-input" placeholder="" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="create-drt-meta-item">
+                    <label id="loadDrtResultLabel">Result</label>
+                    <div class="create-drt-result-picker" id="loadDrtResultPicker"
+                         tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false"
+                         aria-labelledby="loadDrtResultLabel">
+                      <span class="create-drt-result-pill create-drt-result-pill--empty" id="loadDrtResultDisplay">
+                        <span class="create-drt-result-dot"></span>
+                        <span class="create-drt-result-text">-</span>
+                      </span>
+                      <svg class="create-drt-priority-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                      <ul class="create-drt-priority-dropdown create-drt-result-dropdown" role="listbox" aria-labelledby="loadDrtResultLabel">
+                        <li class="create-drt-result-option" data-value="won" role="option" tabindex="-1">
+                          <span class="create-drt-result-pill create-drt-result-pill--won">
+                            <span class="create-drt-result-dot"></span>
+                            <span>Won</span>
+                          </span>
+                        </li>
+                        <li class="create-drt-result-option" data-value="lost" role="option" tabindex="-1">
+                          <span class="create-drt-result-pill create-drt-result-pill--lost">
+                            <span class="create-drt-result-dot"></span>
+                            <span>Lost</span>
+                          </span>
+                        </li>
+                        <li class="create-drt-result-option" data-value="na" role="option" tabindex="-1">
+                          <span class="create-drt-result-pill create-drt-result-pill--na">
+                            <span class="create-drt-result-dot"></span>
+                            <span>NA</span>
+                          </span>
+                        </li>
+                      </ul>
+                      <input type="hidden" id="loadDrtResult" value="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="create-drt-meta-footer">
+                <button type="button" class="primary-button create-drt-save-btn" id="loadDrtSaveBtn" disabled>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                  <span class="create-drt-save-btn-label">Save</span>
+                </button>
+              </div>
+            </section>
+
+            <!-- RIGHT: KPI summary -->
+            <section class="create-drt-summary-section">
+              <div class="create-drt-summary-header">
+                <span class="create-drt-summary-title">Deal Summary</span>
+                <span class="create-drt-summary-subtitle">Auto-calculated from spreadsheet</span>
+              </div>
+              <div class="create-drt-kpi-grid">
+                <div class="create-drt-kpi-card" data-kpi="aov">
+                  <div class="create-drt-kpi-icon create-drt-kpi-icon--blue">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <div class="create-drt-kpi-body">
+                    <span class="create-drt-kpi-label">AOV</span>
+                    <span class="create-drt-kpi-value">—</span>
+                    <span class="create-drt-kpi-sub">Annual Order Value · Year 1</span>
+                  </div>
+                </div>
+                <div class="create-drt-kpi-card" data-kpi="acv">
+                  <div class="create-drt-kpi-icon create-drt-kpi-icon--teal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  </div>
+                  <div class="create-drt-kpi-body">
+                    <span class="create-drt-kpi-label">ACV</span>
+                    <span class="create-drt-kpi-value">—</span>
+                    <span class="create-drt-kpi-sub">Annual Contract Value · Year 1</span>
+                  </div>
+                </div>
+                <div class="create-drt-kpi-card" data-kpi="nnaov">
+                  <div class="create-drt-kpi-icon create-drt-kpi-icon--purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  </div>
+                  <div class="create-drt-kpi-body">
+                    <span class="create-drt-kpi-label">NNAOV</span>
+                    <span class="create-drt-kpi-value">—</span>
+                    <span class="create-drt-kpi-sub">Net New AOV · Year 1</span>
+                  </div>
+                </div>
+                <div class="create-drt-kpi-card" data-kpi="pipeline">
+                  <div class="create-drt-kpi-icon create-drt-kpi-icon--green">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  </div>
+                  <div class="create-drt-kpi-body">
+                    <span class="create-drt-kpi-label">Health</span>
+                    <span class="create-drt-kpi-value">—</span>
+                    <span class="create-drt-kpi-sub">Health Score · Year 1</span>
+                  </div>
+                </div>
+              </div>
+              <table class="create-drt-summary-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Current</th>
+                    <th>Yr 1</th>
+                    <th>Yr 2</th>
+                    <th>Yr 3</th>
+                    <th>Yr 4</th>
+                    <th>Yr 5</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="create-drt-summary-metric-label">AOV</td>
+                    <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="create-drt-summary-metric-label">ACV</td>
+                    <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="create-drt-summary-metric-label">NNAOV</td>
+                    <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                  </tr>
+                  <tr>
+                    <td class="create-drt-summary-metric-label">Health</td>
+                    <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
           </div>
         </div>
-        <div class="create-drt-summary-section">
-          <table class="create-drt-summary-table">
+      </header>
+
+      <!-- ── Scenario Bar ──────────────────────────────────── -->
+      <div class="create-drt-scenario-bar" id="createDrtScenarioBar">
+        <div class="create-drt-scenario-bar__head">
+          <div class="create-drt-scenario-bar__label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+            <span>Scenarios</span>
+          </div>
+          <button type="button" class="create-drt-scenario-bar__toggle-btn" id="createDrtScenarioToggleBtn" aria-expanded="true" aria-controls="createDrtScenarioBody" title="Hide scenarios bar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="create-drt-scenario-toggle-icon"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="create-drt-scenario-divider" aria-hidden="true"></div>
+        </div>
+        <div class="create-drt-scenario-bar__body" id="createDrtScenarioBody">
+          <div class="create-drt-scenario-tabs" id="createDrtScenarioTabs" role="tablist" aria-label="Deal scenarios">
+            <!-- populated by JS -->
+          </div>
+          <button type="button" class="create-drt-scenario-add-btn" id="createDrtScenarioAddBtn" title="Clone current scenario as new">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>New Scenario</span>
+          </button>
+          <div class="create-drt-scenario-bar__right">
+            <span class="create-drt-scenario-count" id="createDrtScenarioCount">1 scenario</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <section class="create-drt-excel-canvas-panel" id="createDrtExcelCanvasPanel">
+      <div class="create-drt-excel-toolbar">
+
+        <!-- 1. Theme toggle + Scenarios restore (shown when bar is hidden) -->
+        <div class="drt-tb-sec drt-tb-sec--toggle">
+          <div class="create-drt-history-controls" aria-label="Spreadsheet history controls">
+            <button type="button" class="create-drt-history-btn" id="createDrtUndoBtn" aria-label="Undo" title="Undo" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 14 4 9l5-5"/>
+                <path d="M20 20a8 8 0 0 0-8-8H4"/>
+              </svg>
+            </button>
+            <button type="button" class="create-drt-history-btn" id="createDrtRedoBtn" aria-label="Redo" title="Redo" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m15 14 5-5-5-5"/>
+                <path d="M4 20a8 8 0 0 1 8-8h8"/>
+              </svg>
+            </button>
+          </div>
+          <span class="create-drt-tb-divider" aria-hidden="true"></span>
+          <div class="create-drt-toolbar-product-count" aria-live="polite">
+            <span class="create-drt-toolbar-product-count-number" id="createDrtWorkpadCountNumber">0</span>
+            <span class="create-drt-toolbar-product-count-label" id="createDrtWorkpadCountLabel">Products</span>
+          </div>
+          <span class="create-drt-tb-divider" aria-hidden="true"></span>
+          <!-- Scenarios restore pill — shown only when the scenario bar is hidden -->
+          <button type="button" class="create-drt-scenario-restore-btn" id="createDrtScenarioRestoreBtn" hidden title="Show scenarios bar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+            <span>Scenarios</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+          </button>
+        </div>
+
+        <!-- 3a. Hide PG Green toggle switch -->
+        <div class="drt-tb-sec drt-tb-sec--pg-filter">
+          <label class="create-drt-pg-toggle-wrap" title="Hide rows where PG indicator is green (Year 1 price > $200)">
+            <span class="create-drt-pg-toggle-label">
+              Hide PG <span class="create-drt-pg-toggle-green">Green</span>
+            </span>
+            <input type="checkbox" id="createDrtHidePgGreenToggle" class="create-drt-pg-toggle-input">
+            <span class="create-drt-pg-toggle-track"></span>
+          </label>
+        </div>
+
+        <!-- 3. Filter -->
+        <div class="drt-tb-sec drt-tb-sec--filter">
+          <label for="productFilter" class="create-drt-filter-label">Filter SKU</label>
+          <div class="create-drt-sku-filter-wrap" id="createDrtSkuFilterWrap">
+            <!-- Plain select (≤ 5 SKUs) -->
+            <select id="productFilter" class="create-drt-filter-select" aria-label="Filter by product">
+              <option value="">All</option>
+            </select>
+            <!-- Searchable combobox (> 5 SKUs) -->
+            <div class="create-drt-sku-combo" id="createDrtSkuCombo" hidden>
+              <div class="create-drt-sku-combo__field">
+                <svg class="create-drt-sku-combo__search-icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="productFilterSearch" class="create-drt-sku-combo__input" placeholder="Search SKU…" autocomplete="off" aria-label="Search and filter by SKU" aria-haspopup="listbox" aria-expanded="false" aria-controls="createDrtSkuList">
+                <button type="button" class="create-drt-sku-combo__clear" id="productFilterClear" hidden aria-label="Clear SKU filter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+              <ul class="create-drt-sku-combo__list" id="createDrtSkuList" role="listbox" aria-label="SKU options" hidden></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Add rows -->
+        <div class="drt-tb-sec drt-tb-sec--addrows">
+          <input type="number" id="addRowsCount" class="create-drt-add-rows-input" min="1" placeholder="#" title="Number of rows to add" aria-label="Number of rows to add">
+          <button type="button" class="create-drt-add-row-btn" id="addRowBtn" title="Add rows" disabled>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Add Rows</span>
+          </button>
+        </div>
+
+        <div class="drt-tb-sec drt-tb-sec--theme">
+          <button type="button" class="create-drt-theme-toggle" id="createDrtThemeToggle" aria-label="Switch to night theme">
+            <span class="theme-toggle-track">
+              <span class="theme-icon sun-moon">
+                <span class="sun-core"></span>
+                <span class="moon-cut"></span>
+                <span class="ray ray-1"></span>
+                <span class="ray ray-2"></span>
+                <span class="ray ray-3"></span>
+                <span class="ray ray-4"></span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <!-- 5. Action buttons -->
+        <div class="drt-tb-sec drt-tb-sec--actions">
+          <!-- Segmented group for data exports -->
+          <div class="drt-btn-group">
+            <button type="button" class="drt-btn-group__btn">SKU &amp; AOV Data</button>
+            <button type="button" class="drt-btn-group__btn">DWS Data</button>
+          </div>
+          <!-- SOX primary action -->
+          <button type="button" class="create-drt-prevalidate-btn" id="soxPrevalidateBtn">SOX: Pre-validate</button>
+        </div>
+
+      </div>
+      <div class="create-drt-excel-canvas-grid" aria-label="Excel style calculation canvas">
+        <div class="create-drt-outlines-row">
+          <div class="create-drt-excel-outline" id="createDrtExcelOutline" aria-hidden="true">
+            <span class="create-drt-excel-outline-label">Workpad</span>
+            <button
+              type="button"
+              class="create-drt-excel-outline-toggle"
+              id="createDrtExcelToggle"
+              aria-expanded="true"
+              aria-controls="createDrtSpreadsheet"
+              title="Show Workpad columns"
+            >+</button>
+            <span class="create-drt-excel-outline-line"></span>
+          </div>
+          <div class="create-drt-excel-outline" id="createDrtAddlInfoOutline" aria-hidden="true">
+            <span class="create-drt-excel-outline-label">Additional Inputs</span>
+            <button
+              type="button"
+              class="create-drt-excel-outline-toggle"
+              id="addlInfoToggleBtn"
+              aria-expanded="true"
+              aria-controls="createDrtSpreadsheet"
+              title="Collapse additional info columns"
+            >-</button>
+            <span class="create-drt-excel-outline-line"></span>
+          </div>
+          <div class="create-drt-excel-outline" id="createDrtPricingInfoOutline" aria-hidden="true">
+            <span class="create-drt-excel-outline-label">Pricing</span>
+            <button
+              type="button"
+              class="create-drt-excel-outline-toggle"
+              id="pricingInfoToggleBtn"
+              aria-expanded="true"
+              aria-controls="createDrtSpreadsheet"
+              title="Collapse pricing info columns"
+            >-</button>
+            <span class="create-drt-excel-outline-line"></span>
+          </div>
+          <div class="create-drt-excel-outline" id="createDrtProductInfoOutline" aria-hidden="true">
+            <span class="create-drt-excel-outline-label">Product Info</span>
+            <button
+              type="button"
+              class="create-drt-excel-outline-toggle"
+              id="productInfoGroupToggleBtn"
+              aria-expanded="true"
+              aria-controls="createDrtSpreadsheet"
+              title="Collapse product info columns"
+            >-</button>
+            <span class="create-drt-excel-outline-line"></span>
+          </div>
+        </div>
+        <div class="create-drt-excel-canvas-host" id="createDrtSpreadsheet"></div>
+      </div>
+    </section>
+
+    <div class="create-drt-chart-modal" id="createDrtChartModal" hidden>
+      <div class="create-drt-chart-modal__backdrop" data-chart-close></div>
+      <div class="create-drt-chart-modal__panel" role="dialog" aria-modal="true" aria-labelledby="createDrtChartTitle">
+        <div class="create-drt-chart-modal__header">
+          <div class="create-drt-chart-modal__header-meta">
+            <div class="create-drt-chart-modal__icon-badge" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg>
+            </div>
+            <div>
+              <h3 class="create-drt-chart-modal__title" id="createDrtChartTitle">SKU Trend</h3>
+              <p class="create-drt-chart-modal__subtitle" id="createDrtChartSubtitle"></p>
+            </div>
+          </div>
+          <div class="create-drt-chart-modal__header-controls">
+            <!-- Layout switcher: 1 / 2 / 3 panels -->
+            <div class="create-drt-chart-layout-switcher" id="createDrtChartLayoutSwitcher" aria-label="Chart layout">
+              <button class="create-drt-chart-layout-btn active" data-chart-layout="1" type="button" title="Single chart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><rect x="2" y="2" width="16" height="16" rx="2"/></svg>
+              </button>
+              <button class="create-drt-chart-layout-btn" data-chart-layout="2" type="button" title="Two charts">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><rect x="1" y="2" width="8" height="16" rx="2"/><rect x="11" y="2" width="8" height="16" rx="2"/></svg>
+              </button>
+              <button class="create-drt-chart-layout-btn" data-chart-layout="3" type="button" title="Three charts">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><rect x="1" y="2" width="5" height="16" rx="1.5"/><rect x="7.5" y="2" width="5" height="16" rx="1.5"/><rect x="14" y="2" width="5" height="16" rx="1.5"/></svg>
+              </button>
+            </div>
+            <!-- Global type switcher (single-panel mode only) -->
+            <nav class="create-drt-chart-type-switcher" id="createDrtChartTypeSwitcher" aria-label="Chart type">
+              <button class="create-drt-chart-type-btn active" data-chart-type="line" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-7"/></svg>
+                <span>Trend</span>
+              </button>
+              <button class="create-drt-chart-type-btn" data-chart-type="bar" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+                <span>Bar</span>
+              </button>
+              <button class="create-drt-chart-type-btn" data-chart-type="radar" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="8.5" x2="22" y2="8.5"/><line x1="2" y1="15.5" x2="22" y2="15.5"/></svg>
+                <span>Radar</span>
+              </button>
+            </nav>
+            <button type="button" class="create-drt-chart-modal__maximize" id="createDrtChartMaximize" aria-label="Maximize chart" title="Maximize">
+              <!-- Maximize icon (shown in normal state) -->
+              <svg class="create-drt-chart-maximize-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+              </svg>
+              <!-- Restore icon (shown when maximized) -->
+              <svg class="create-drt-chart-restore-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/>
+                <line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/>
+              </svg>
+            </button>
+            <button type="button" class="create-drt-chart-modal__close" data-chart-close aria-label="Close chart">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m18 6-12 12M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="create-drt-chart-modal__body">
+          <div class="create-drt-chart-panels" id="createDrtChartPanels">
+            <!-- populated dynamically by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOX Pre-validate Modal -->
+    <div class="sox-modal" id="soxModal" hidden aria-modal="true" role="dialog" aria-labelledby="soxModalTitle">
+      <div class="sox-modal__backdrop" data-sox-close></div>
+      <div class="sox-modal__panel">
+        <div class="sox-modal__header">
+          <div class="sox-modal__header-left">
+            <span class="sox-modal__badge">SOX</span>
+            <div>
+              <h2 class="sox-modal__title" id="soxModalTitle">Pre-validate Review</h2>
+              <p class="sox-modal__subtitle">Check below the list of items that could fail SOX review</p>
+            </div>
+          </div>
+          <button type="button" class="sox-modal__close" data-sox-close aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="sox-modal__body">
+          <table class="sox-modal__table">
             <thead>
               <tr>
-                <th></th>
-                <th>Current</th>
-                <th>Year 1</th>
-                <th>Year 2</th>
-                <th>Year 3</th>
-                <th>Year 4</th>
-                <th>Year 5</th>
-                <th>Total</th>
+                <th class="sox-th sox-th--num">#</th>
+                <th class="sox-th">Product Name</th>
+                <th class="sox-th">Probable reason</th>
+                <th class="sox-th sox-th--action">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Total ACV</td>
-                <td>$125,000</td>
-                <td>$132,000</td>
-                <td>$139,000</td>
-                <td>$146,000</td>
-                <td>$153,000</td>
-                <td>$160,000</td>
-                <td>$995,000</td>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">1</td>
+                <td class="sox-td"><span class="sox-product">Salesforce CRM — Enterprise</span></td>
+                <td class="sox-td"><span class="sox-reason">Missing contract approval signature</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
               </tr>
-              <tr>
-                <td>Total NNAOV</td>
-                <td>$98,500</td>
-                <td>$104,200</td>
-                <td>$110,100</td>
-                <td>$116,200</td>
-                <td>$122,500</td>
-                <td>$129,000</td>
-                <td>$780,500</td>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">2</td>
+                <td class="sox-td"><span class="sox-product">Adobe Experience Cloud</span></td>
+                <td class="sox-td"><span class="sox-reason">Price exceeds approved threshold by 18%</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
               </tr>
-              <tr>
-                <td>Pipeline Health</td>
-                <td>0.9%</td>
-                <td>1.0%</td>
-                <td>1.1%</td>
-                <td>1.2%</td>
-                <td>1.3%</td>
-                <td>1.4%</td>
-                <td>1.5%</td>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">3</td>
+                <td class="sox-td"><span class="sox-product">ServiceNow ITSM Pro</span></td>
+                <td class="sox-td"><span class="sox-reason">Vendor not on approved supplier list</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
+              </tr>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">4</td>
+                <td class="sox-td"><span class="sox-product">Microsoft 365 E5 — 500 seats</span></td>
+                <td class="sox-td"><span class="sox-reason">Duplicate SKU detected in active DRT</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
+              </tr>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">5</td>
+                <td class="sox-td"><span class="sox-product">Workday HCM Platform</span></td>
+                <td class="sox-td"><span class="sox-reason">Annual value change &gt; 10% without CAB sign-off</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
+              </tr>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">6</td>
+                <td class="sox-td"><span class="sox-product">Splunk Enterprise Security</span></td>
+                <td class="sox-td"><span class="sox-reason">Subscription end date past fiscal year boundary</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
+              </tr>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">7</td>
+                <td class="sox-td"><span class="sox-product">AWS Reserved Instances — Compute</span></td>
+                <td class="sox-td"><span class="sox-reason">No cost-center allocation recorded</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
+              </tr>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">8</td>
+                <td class="sox-td"><span class="sox-product">Tableau Server — Analytics</span></td>
+                <td class="sox-td"><span class="sox-reason">PO reference missing from purchase record</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
+              </tr>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">9</td>
+                <td class="sox-td"><span class="sox-product">Okta Identity Cloud</span></td>
+                <td class="sox-td"><span class="sox-reason">Security classification not set</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
+              </tr>
+              <tr class="sox-tr">
+                <td class="sox-td sox-td--num">10</td>
+                <td class="sox-td"><span class="sox-product">Zendesk Suite — Professional</span></td>
+                <td class="sox-td"><span class="sox-reason">Finance approval workflow bypassed</span></td>
+                <td class="sox-td sox-td--action"><button class="sox-update-btn">Update</button></td>
               </tr>
             </tbody>
           </table>
-          <div class="create-drt-action-btns">
-            <button type="button" class="primary-button">Generate SKU and AOV Data</button>
-            <button type="button" class="primary-button">Generate Data File for Upload</button>
+        </div>
+        <div class="sox-modal__footer">
+          <span class="sox-modal__count"><strong>10</strong> items require attention</span>
+          <div class="sox-modal__footer-actions">
+            <button type="button" class="sox-btn sox-btn--secondary" data-sox-close>Close</button>
           </div>
         </div>
       </div>
-    </header>
-
-    <div class="create-drt-excel-bar" id="excelFormulaBar" aria-hidden="true">
-      <label class="create-drt-formula-label" for="excelFormulaInput">fx</label>
-      <input type="text" id="excelFormulaInput" class="create-drt-formula-input" placeholder="Enter formula (e.g. =SUM(A1:A5)) — click cells to insert references" autocomplete="off">
-    </div>
-    <div class="create-drt-toolbar">
-      <button type="button" class="theme-toggle create-drt-theme-toggle" id="createDrtThemeToggle" aria-label="Switch to night theme">
-        <span class="theme-toggle-track">
-          <span class="theme-icon sun-moon">
-            <span class="sun-core"></span>
-            <span class="moon-cut"></span>
-            <span class="ray ray-1"></span>
-            <span class="ray ray-2"></span>
-            <span class="ray ray-3"></span>
-            <span class="ray ray-4"></span>
-          </span>
-        </span>
-        <span class="theme-label">Day Mode</span>
-      </button>
-      <button type="button" class="primary-button create-drt-style-toggle" id="inputStyleToggle" title="Toggle input style">
-        <span class="toggle-icon-excel" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h2"/><path d="M8 17h2"/><path d="M14 13h2"/><path d="M14 17h2"/></svg>
-        </span>
-        <span class="toggle-icon-table" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-        </span>
-        <span class="toggle-label">Excel</span>
-      </button>
-      <div class="create-drt-filter-wrap">
-        <label for="productFilter" class="create-drt-filter-label">Filter by Product</label>
-        <select id="productFilter" class="create-drt-input create-drt-select create-drt-filter-select" aria-label="Filter by product">
-          <option value="">All</option>
-        </select>
-      </div>
-      <div class="create-drt-add-rows-wrap">
-        <input type="number" id="addRowsCount" class="create-drt-add-rows-input" min="1" placeholder="#" title="Number of rows to add" aria-label="Number of rows to add">
-        <button type="button" class="ghost-button create-drt-add-row-btn" id="addRowBtn" title="Add rows" disabled>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          <span>Add Rows</span>
-        </button>
-      </div>
-    </div>
     </div>
 
     <div class="create-drt-table-wrap">
       <table class="create-drt-table" id="createDrtTable">
-        <thead>
-          <tr class="create-drt-header-row-0 create-drt-alphabet-row">
-            <th class="col-row-num col-alphabet"></th>
-            <th class="col-delete col-alphabet"></th>
-            <th class="col-alphabet">A</th><th class="col-alphabet">B</th><th class="col-alphabet">C</th><th class="col-alphabet">D</th><th class="col-alphabet">E</th>
-            <th class="col-alphabet">F</th><th class="col-alphabet">G</th><th class="col-alphabet">H</th><th class="col-alphabet">I</th><th class="col-alphabet">J</th><th class="col-alphabet">K</th><th class="col-alphabet">L</th><th class="col-alphabet">M</th><th class="col-alphabet">N</th>
-            <th class="col-alphabet">O</th><th class="col-alphabet">P</th><th class="col-alphabet">Q</th><th class="col-alphabet">R</th><th class="col-alphabet">S</th><th class="col-alphabet">T</th>
-            <th class="col-alphabet">U</th><th class="col-alphabet">V</th><th class="col-alphabet">W</th><th class="col-alphabet">X</th><th class="col-alphabet">Y</th><th class="col-alphabet">Z</th>
-            <th class="col-alphabet">AA</th><th class="col-alphabet">AB</th><th class="col-alphabet">AC</th><th class="col-alphabet">AD</th><th class="col-alphabet">AE</th><th class="col-alphabet">AF</th>
-            <th class="col-alphabet">AG</th><th class="col-alphabet">AH</th><th class="col-alphabet">AI</th><th class="col-alphabet">AJ</th><th class="col-alphabet">AK</th><th class="col-alphabet">AL</th><th class="col-alphabet">AM</th><th class="col-alphabet">AN</th><th class="col-alphabet">AO</th><th class="col-alphabet">AP</th><th class="col-alphabet">AQ</th>
-          </tr>
-          <tr class="create-drt-header-row-1">
-            <th colspan="7" rowspan="2" class="create-drt-group-header col-excel-canvas">Excel Canvas</th>
-            <th rowspan="2" class="col-readonly">SKU</th>
-            <th rowspan="2">Additional Comment</th>
-            <th rowspan="2">Apply SELA Discount</th>
-            <th rowspan="2">Capped/Uncapped</th>
-            <th rowspan="2">SELA/Std Quote</th>
-            <th rowspan="2">Contract Number</th>
-            <th rowspan="2">Contract End Date</th>
-            <th rowspan="2">OrgID/Tenant/TIG</th>
-            <th rowspan="2">SKU Name</th>
-            <th colspan="6" class="create-drt-group-header">Number of Subscriptions</th>
-            <th colspan="6" class="create-drt-group-header">Monthly Unit Price</th>
-            <th colspan="6" class="create-drt-group-header col-readonly">Total Annual Price</th>
-            <th rowspan="2" class="col-new-total col-readonly">New Total</th>
-            <th rowspan="2" class="col-scroll-start">Addon Unit Price (monthly)</th>
-            <th rowspan="2" class="col-readonly">Cloud of SKU</th>
-            <th rowspan="2" class="col-readonly">Eligible Signature Success Add-On Fees</th>
-            <th rowspan="2" class="col-readonly">List Price (Monthly)</th>
-            <th rowspan="2" class="col-readonly">Exit Discount</th>
-            <th rowspan="2">Include in % Based Pricing? (Refer to Note 5)</th>
-            <th rowspan="2">Exit Color Guidance*</th>
-            <th rowspan="2">Exit Approval Level*</th>
-            <th rowspan="2" class="col-readonly">SELA Eligibility</th>
-            <th rowspan="2" class="col-readonly">AWS Eligibility</th>
-          </tr>
-          <tr class="create-drt-header-row-2">
-            <th class="create-drt-sub-first">Current</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th>
-            <th class="create-drt-sub-first">Current</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th><th>Year 5</th>
-            <th class="create-drt-sub-first col-readonly">Current</th><th class="col-readonly">Year 1</th><th class="col-readonly">Year 2</th><th class="col-readonly">Year 3</th><th class="col-readonly">Year 4</th><th class="col-readonly">Year 5</th>
-          </tr>
-        </thead>
+        <colgroup id="createDrtColgroup"></colgroup>
+        <thead id="createDrtHead"></thead>
         <tbody id="createDrtBody"></tbody>
       </table>
     </div>
   </div>
-  <script>
-    window.DRT_QUEUE_DATA = [
-      {"id":"DRT-1042","priority":"High","account":"Apex Systems","aov":"$125K","owner":"Maya Chen","createdTimestamp":"2025-03-18T10:30:00","lastModified":"1 hour ago","status":"Pending Approval","assigned":true,"timeToTarget":"Today"},
-      {"id":"DRT-1041","priority":"High","account":"TechCorp Inc","aov":"$89K","owner":"James Wilson","createdTimestamp":"2025-03-18T08:15:00","lastModified":"2 hours ago","status":"Pending Approval","assigned":true,"timeToTarget":"1 day left"},
-      {"id":"DRT-1040","priority":"High","account":"Global Solutions","aov":"$210K","owner":"Sarah Lee","createdTimestamp":"2025-03-17T14:00:00","lastModified":"Yesterday","status":"WIP","assigned":true,"timeToTarget":"Overdue"},
-      {"id":"DRT-1035","priority":"Medium","account":"Northstar Health","aov":"$67K","owner":"Wilson Peddity","createdTimestamp":"2025-03-16T09:45:00","lastModified":"Today","status":"WIP","assigned":true,"timeToTarget":"2 days left"},
-      {"id":"DRT-1038","priority":"Medium","account":"Vertex Manufacturing","aov":"$156K","owner":"William Peddity","createdTimestamp":"2025-03-15T11:20:00","lastModified":"Today","status":"WIP","assigned":true,"timeToTarget":"3 days left"},
-      {"id":"DRT-1037","priority":"Low","account":"Brightline Media","aov":"$42K","owner":"William Peddity","createdTimestamp":"2025-03-14T16:30:00","lastModified":"Yesterday","status":"WIP","assigned":true,"timeToTarget":"5 days left"},
-      {"id":"DRT-1028","priority":"High","account":"Brightline Media","aov":"$98K","owner":"Noor Patel","createdTimestamp":"2025-03-13T13:15:00","lastModified":"Yesterday","status":"Pending Approval","assigned":true,"timeToTarget":"4 days left"},
-      {"id":"DRT-1032","priority":"Medium","account":"Summit Partners","aov":"$178K","owner":"Noor Patel","createdTimestamp":"2025-03-12T10:00:00","lastModified":"Mar 12","status":"Pending Approval","assigned":true,"timeToTarget":"6 days left"},
-      {"id":"DRT-1025","priority":"Low","account":"Horizon Labs","aov":"$55K","owner":"Maya Chen","createdTimestamp":"2025-03-11T14:45:00","lastModified":"Mar 11","status":"WIP","assigned":true,"timeToTarget":"7 days left"},
-      {"id":"DRT-1019","priority":"Low","account":"Vertex Manufacturing","aov":"$92K","owner":"Ishan Rao","createdTimestamp":"2025-03-03T09:30:00","lastModified":"Mar 12","status":"Closed Won","assigned":false,"timeToTarget":"—"},
-      {"id":"DRT-1015","priority":"Medium","account":"Apex Systems","aov":"$134K","owner":"James Wilson","createdTimestamp":"2025-03-01T11:00:00","lastModified":"Mar 10","status":"Closed Lost","assigned":false,"timeToTarget":"—"},
-      {"id":"DRT-1012","priority":"High","account":"TechCorp Inc","aov":"$245K","owner":"Sarah Lee","createdTimestamp":"2025-02-28T15:20:00","lastModified":"Mar 08","status":"Closed Won","assigned":false,"timeToTarget":"—"}
-    ];
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
   <script src="create-drt.js"></script>
   <script src="load-drt.js"></script>
 </body>

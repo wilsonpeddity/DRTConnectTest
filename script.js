@@ -1,5 +1,5 @@
 const themeToggle = document.getElementById("themeToggle");
-const themeLabel = themeToggle.querySelector(".theme-label");
+const themeLabel = themeToggle?.querySelector(".theme-label");
 const modalBackdrop = document.getElementById("modalBackdrop");
 const modalClose = document.getElementById("modalClose");
 const modalEyebrow = document.getElementById("modalEyebrow");
@@ -20,6 +20,7 @@ const reportsToggle = document.getElementById("reportsToggle");
 const reportsSection = document.querySelector(".reports-section");
 const tabPills = document.querySelectorAll(".tab-pill");
 const drtRowsContainer = document.getElementById("drtRows");
+const queueSearchInput = document.getElementById("queueSearchInput");
 const unreadUpdatesList = document.getElementById("unreadUpdatesList");
 const sortableHeaders = document.querySelectorAll(".sortable");
 const savedTheme = window.localStorage.getItem("drt-theme");
@@ -77,11 +78,13 @@ function getQueueCount(queue) {
   const data = window.DRT_QUEUE_DATA || [];
   return data.filter((row) => {
     const isClosed = ["Closed Won", "Closed Lost"].includes(row.status);
+    const isDraft = row.status === "Draft";
     switch (queue) {
-      case "highPriority": return row.priority === "High" && !isClosed;
-      case "assigned": return row.assigned && !isClosed;
-      case "myDrt": return row.owner === CURRENT_USER && !isClosed;
-      case "allOpen": return !isClosed;
+      case "highPriority": return row.priority === "High" && !isClosed && !isDraft;
+      case "assigned": return row.assigned && !isClosed && !isDraft;
+      case "myDrt": return row.owner === CURRENT_USER && !isClosed && !isDraft;
+      case "allOpen": return !isClosed && !isDraft;
+      case "drafts": return isDraft;
       case "closed": return isClosed;
       default: return true;
     }
@@ -99,11 +102,13 @@ function getQueueFilteredData() {
   const data = window.DRT_QUEUE_DATA || [];
   return data.filter((row) => {
     const isClosed = ["Closed Won", "Closed Lost"].includes(row.status);
+    const isDraft = row.status === "Draft";
     switch (currentQueue) {
-      case "highPriority": return row.priority === "High" && !isClosed;
-      case "assigned": return row.assigned && !isClosed;
-      case "myDrt": return row.owner === CURRENT_USER && !isClosed;
-      case "allOpen": return !isClosed;
+      case "highPriority": return row.priority === "High" && !isClosed && !isDraft;
+      case "assigned": return row.assigned && !isClosed && !isDraft;
+      case "myDrt": return row.owner === CURRENT_USER && !isClosed && !isDraft;
+      case "allOpen": return !isClosed && !isDraft;
+      case "drafts": return isDraft;
       case "closed": return isClosed;
       default: return true;
     }
@@ -114,7 +119,7 @@ function getSearchFilteredData(data) {
   if (!searchQuery.trim()) return data;
   const q = searchQuery.trim().toLowerCase();
   return data.filter((row) => {
-    const searchStr = [row.id, row.priority, row.account, row.aov, row.owner, row.status, row.timeToTarget].join(" ").toLowerCase();
+    const searchStr = [row.id, row.account, row.owner].join(" ").toLowerCase();
     return searchStr.includes(q);
   });
 }
@@ -211,8 +216,9 @@ function duplicateDrt(row) {
   copy.id = getNextDrtId();
   copy.createdTimestamp = new Date().toISOString();
   copy.lastModified = "Just now";
-  copy.status = row.status === "Closed Won" || row.status === "Closed Lost" ? "WIP" : row.status;
-  copy.timeToTarget = row.status === "Closed Won" || row.status === "Closed Lost" ? "—" : row.timeToTarget;
+  copy.status = "Draft";
+  copy.assigned = false;
+  copy.timeToTarget = "�";
   data.unshift(copy);
   renderTable();
 }
@@ -439,7 +445,9 @@ function renderUpdatesModal() {
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
   const isNight = theme === "night";
-  themeLabel.textContent = isNight ? "Night Mode" : "Day Mode";
+  if (themeLabel) {
+    themeLabel.textContent = isNight ? "Night Mode" : "Day Mode";
+  }
   window.localStorage.setItem("drt-theme", theme);
   themeToggle.setAttribute(
     "aria-label",
@@ -506,7 +514,13 @@ themeToggle.addEventListener("click", () => {
 });
 
 navActions.forEach((button) => {
-  button.addEventListener("click", () => openModal(button.dataset.modal));
+  button.addEventListener("click", () => {
+    if (button.dataset.modal === "reports") {
+      openReportsModal();
+    } else {
+      openModal(button.dataset.modal);
+    }
+  });
 });
 
 if (createNewBtn) {
@@ -551,6 +565,13 @@ tabPills.forEach((button) => {
     renderTable();
   });
 });
+
+if (queueSearchInput) {
+  queueSearchInput.addEventListener("input", () => {
+    searchQuery = queueSearchInput.value || "";
+    renderTable();
+  });
+}
 
 sortableHeaders.forEach((th) => {
   th.addEventListener("click", () => {
@@ -618,3 +639,283 @@ document.addEventListener("click", () => {
   document.querySelectorAll(".row-menu-dropdown").forEach((d) => { d.hidden = true; });
   document.querySelectorAll(".row-menu-btn").forEach((b) => b.setAttribute("aria-expanded", "false"));
 });
+
+// ── Reports Modal ─────────────────────────────────────────────────────────
+
+const rptModal      = document.getElementById("rptModal");
+const rptModalPanel = document.getElementById("rptModalPanel");
+
+// Salesforce blue color palette
+const _RPT_CP = {
+  series: [{ hi: "#0176d3", lo: "#014486" }, { hi: "#1b96ff", lo: "#0176d3" }],
+  lineA: "#0176d3", lineB: "#1b96ff",
+  gradA: "rgba(1,118,211,0.90)", gradB: "rgba(27,150,255,0.65)",
+  areaA: "rgba(1,118,211,0.18)", areaB: "rgba(1,118,211,0.00)",
+  grid: "#f0f7ff", gridStrong: "#7ec0f7",
+  axisLbl: "#94a3b8", peakLbl: "#014486",
+};
+
+const RPT_CHARTS = [
+  {
+    label: "Closed",
+    info: "Number of deals closed in current Qtr. The bar charts show the count across past 5 qtrs.",
+    fmt: (v) => String(Math.round(v)),
+    quarterly: {
+      subtitle: "FY27 Q2 · deals closed per quarter",
+      values: [89, 104, 113, 118, 121, 126],
+      labels: ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26"],
+    },
+    monthly: {
+      subtitle: "Mar FY26 · deals closed per month",
+      values: [18, 22, 31, 19, 24, 28, 21, 26, 30, 20, 25, 32],
+      labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
+    },
+  },
+  {
+    label: "Avg. Discount %",
+    info: "Average discount percentage applied across deals. 11.8% is 20.2% below the quarterly ceiling, indicating healthy discount control.",
+    fmt: (v) => v.toFixed(1) + "%",
+    quarterly: {
+      subtitle: "Average discount applied per quarter",
+      values: [14.2, 13.8, 13.1, 12.6, 12.2, 11.8],
+      labels: ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26"],
+    },
+    monthly: {
+      subtitle: "Average discount applied per month",
+      values: [12.9, 12.4, 11.9, 12.6, 12.1, 11.6, 12.3, 11.9, 11.4, 12.1, 11.7, 11.8],
+      labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
+    },
+  },
+  {
+    label: "Avg. Won Rate",
+    info: "Percentage of opportunities that converted to closed won. 63% of qualified opportunities were successfully closed in the period.",
+    fmt: (v) => Math.round(v) + "%",
+    quarterly: {
+      subtitle: "Conversion view · % of deals closed won",
+      values: [54, 57, 59, 61, 62, 63],
+      labels: ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26"],
+    },
+    monthly: {
+      subtitle: "% of deals closed won per month",
+      values: [58, 61, 64, 59, 62, 65, 60, 63, 66, 61, 62, 63],
+      labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
+    },
+  },
+  {
+    label: "NNAOV/ACV",
+    info: "Growth vs. base — How much new value (NNA) you're adding vs. existing contract value (ACV).\n\nRatio — The 1.28x is the NNAOV/ACV ratio: for every 1 of ACV, you are adding about 1.28 of new annual value.\n\nPipeline health — A ratio above 1.0 typically means you're adding more new value than your current base.",
+    fmt: (v) => v.toFixed(2) + "x",
+    quarterly: {
+      subtitle: "Value mix · NNAOV / ACV ratio per quarter",
+      values: [0.92, 1.01, 1.10, 1.18, 1.23, 1.28],
+      labels: ["Q3 FY25", "Q4 FY25", "Q1 FY26", "Q2 FY26", "Q3 FY26", "Q4 FY26"],
+    },
+    monthly: {
+      subtitle: "Value mix · NNAOV / ACV ratio per month",
+      values: [1.05, 1.12, 1.18, 1.09, 1.16, 1.22, 1.14, 1.20, 1.25, 1.18, 1.24, 1.28],
+      labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
+    },
+  },
+];
+
+let _rptActiveChart = 0;
+let _rptChartType   = "line";
+let _rptPeriod      = "quarterly";
+let _rptMaximized   = false;
+
+function _rptBuildLineChart(values, labels, W, H, fmt) {
+  const pad = { top: 48, left: 68, right: 32, bottom: 44 };
+  const iW = W - pad.left - pad.right;
+  const iH = H - pad.top - pad.bottom;
+  const n   = values.length;
+  const mx  = Math.max(...values);
+  const mn  = Math.min(...values);
+  const rng = mx - mn || mx || 1;
+  const dMax = mx + rng * 0.15;
+  const dMin = Math.max(0, mn - rng * 0.05);
+  const span = dMax - dMin || 1;
+  const uid  = "rptl" + Math.random().toString(36).slice(2, 8);
+  const dotR = 5.5;
+
+  const pts = values.map((v, i) => ({
+    x: pad.left + (i / (n - 1)) * iW,
+    y: pad.top + iH * (1 - (v - dMin) / span),
+    v, lbl: labels[i],
+  }));
+
+  const gridLines = Array.from({ length: 5 }, (_, i) => {
+    const y = pad.top + (i / 4) * iH;
+    const v = dMax - (i / 4) * span;
+    return `<line x1="${pad.left}" y1="${y.toFixed(1)}" x2="${(pad.left + iW).toFixed(1)}" y2="${y.toFixed(1)}" stroke="${_RPT_CP.grid}" stroke-width="1.2"/>
+      <text x="${(pad.left - 8).toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="${_RPT_CP.axisLbl}" font-family="system-ui,sans-serif">${fmt(v)}</text>`;
+  }).join("");
+
+  const linePtsStr = pts.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" L ");
+  const areaPath = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)} L ${linePtsStr.slice(linePtsStr.indexOf(" L ") + 3)} L ${pts[n-1].x.toFixed(1)},${(pad.top + iH).toFixed(1)} L ${pts[0].x.toFixed(1)},${(pad.top + iH).toFixed(1)} Z`;
+
+  const maxV = Math.max(...values);
+  const dots = pts.map((p) => {
+    const isPeak = p.v === maxV;
+    const c = isPeak ? _RPT_CP.lineA : _RPT_CP.lineB;
+    return `${isPeak ? `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${dotR + 9}" fill="none" stroke="${_RPT_CP.lineA}" stroke-opacity="0.16" stroke-width="1.5"/>` : ""}
+      <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${dotR}" fill="#fff" stroke="${c}" stroke-width="2.6"/>
+      <text x="${p.x.toFixed(1)}" y="${(p.y - dotR - 9).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="${isPeak ? _RPT_CP.peakLbl : _RPT_CP.axisLbl}" font-family="system-ui,sans-serif">${fmt(p.v)}</text>`;
+  }).join("");
+
+  const xLabels = pts.map((p) =>
+    `<text x="${p.x.toFixed(1)}" y="${(H - 14).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="600" fill="${_RPT_CP.axisLbl}" font-family="system-ui,sans-serif">${p.lbl}</text>`
+  ).join("");
+
+  return `<defs>
+    <linearGradient id="${uid}-area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${_RPT_CP.areaA}"/>
+      <stop offset="100%" stop-color="${_RPT_CP.areaB}"/>
+    </linearGradient>
+    <linearGradient id="${uid}-line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${_RPT_CP.gradA}"/>
+      <stop offset="100%" stop-color="${_RPT_CP.gradB}"/>
+    </linearGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="transparent"/>
+  ${gridLines}
+  <path d="${areaPath}" fill="url(#${uid}-area)"/>
+  <path d="M ${linePtsStr}" fill="none" stroke="url(#${uid}-line)" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
+  ${dots}
+  ${xLabels}
+  <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${(pad.top + iH).toFixed(1)}" stroke="${_RPT_CP.grid}" stroke-width="1"/>
+  <line x1="${pad.left}" y1="${(pad.top + iH).toFixed(1)}" x2="${(pad.left + iW).toFixed(1)}" y2="${(pad.top + iH).toFixed(1)}" stroke="${_RPT_CP.gridStrong}" stroke-width="1.5"/>`;
+}
+
+function _rptBuildBarChart(values, labels, W, H, fmt) {
+  const pad = { top: 48, left: 68, right: 32, bottom: 44 };
+  const iW  = W - pad.left - pad.right;
+  const iH  = H - pad.top - pad.bottom;
+  const n   = values.length;
+  const mx  = Math.max(...values, 1);
+  const barW = iW / n * 0.54;
+  const gap  = iW / n;
+  const uid  = "rptb" + Math.random().toString(36).slice(2, 8);
+
+  const gridLines = Array.from({ length: 5 }, (_, i) => {
+    const y = pad.top + (i / 4) * iH;
+    const v = mx * (1 - i / 4);
+    return `<line x1="${pad.left}" y1="${y.toFixed(1)}" x2="${(pad.left + iW).toFixed(1)}" y2="${y.toFixed(1)}" stroke="${_RPT_CP.grid}" stroke-width="1.2"/>
+      <text x="${(pad.left - 8).toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="${_RPT_CP.axisLbl}" font-family="system-ui,sans-serif">${fmt(v)}</text>`;
+  }).join("");
+
+  const maxV = Math.max(...values);
+  const bars = values.map((v, i) => {
+    const barH = (v / mx) * iH;
+    const x    = pad.left + gap * i + (gap - barW) / 2;
+    const y    = pad.top + iH - barH;
+    const isPeak = v === maxV;
+    return `<defs>
+      <linearGradient id="${uid}-b${i}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${_RPT_CP.series[0].hi}"/>
+        <stop offset="100%" stop-color="${_RPT_CP.series[0].lo}"/>
+      </linearGradient>
+    </defs>
+    <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" rx="6" fill="url(#${uid}-b${i})"/>
+    ${isPeak ? `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${barH.toFixed(1)}" rx="6" fill="none" stroke="${_RPT_CP.series[0].hi}" stroke-width="1.5" stroke-opacity="0.5"/>` : ""}
+    <text x="${(x + barW / 2).toFixed(1)}" y="${(y - 9).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="${isPeak ? _RPT_CP.peakLbl : _RPT_CP.axisLbl}" font-family="system-ui,sans-serif">${fmt(v)}</text>
+    <text x="${(x + barW / 2).toFixed(1)}" y="${(H - 14).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="600" fill="${_RPT_CP.axisLbl}" font-family="system-ui,sans-serif">${labels[i]}</text>`;
+  }).join("");
+
+  return `<rect width="${W}" height="${H}" fill="transparent"/>
+  ${gridLines}
+  ${bars}
+  <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${(pad.top + iH).toFixed(1)}" stroke="${_RPT_CP.grid}" stroke-width="1"/>
+  <line x1="${pad.left}" y1="${(pad.top + iH).toFixed(1)}" x2="${(pad.left + iW).toFixed(1)}" y2="${(pad.top + iH).toFixed(1)}" stroke="${_RPT_CP.gridStrong}" stroke-width="1.5"/>`;
+}
+
+function _rptRenderChart() {
+  const svgEl = document.getElementById("rptChartSvg");
+  if (!svgEl) return;
+  const chart  = RPT_CHARTS[_rptActiveChart];
+  const period = chart[_rptPeriod];
+  svgEl.setAttribute("viewBox", "0 0 800 400");
+  svgEl.innerHTML = _rptChartType === "bar"
+    ? _rptBuildBarChart(period.values, period.labels, 800, 400, chart.fmt)
+    : _rptBuildLineChart(period.values, period.labels, 800, 400, chart.fmt);
+}
+
+function _rptSyncHeader() {
+  const chart  = RPT_CHARTS[_rptActiveChart];
+  const period = chart[_rptPeriod];
+  const titleEl  = document.getElementById("rptModalTitle");
+  const subText  = document.getElementById("rptSubtitleText");
+  if (titleEl)  titleEl.textContent  = chart.label;
+  if (subText)  subText.textContent  = period.subtitle;
+  rptModal.querySelectorAll("[data-rpt-chart]").forEach((btn) =>
+    btn.classList.toggle("active", Number(btn.dataset.rptChart) === _rptActiveChart)
+  );
+  rptModal.querySelectorAll("[data-rpt-type]").forEach((btn) =>
+    btn.classList.toggle("active", btn.dataset.rptType === _rptChartType)
+  );
+  rptModal.querySelectorAll("[data-rpt-period]").forEach((btn) =>
+    btn.classList.toggle("active", btn.dataset.rptPeriod === _rptPeriod)
+  );
+}
+
+function openReportsModal() {
+  if (!rptModal) return;
+  navActions.forEach((b) => b.classList.toggle("is-active", b.dataset.modal === "reports"));
+  _rptSyncHeader();
+  _rptRenderChart();
+  rptModal.hidden = false;
+}
+
+function closeReportsModal() {
+  if (!rptModal) return;
+  _rptSetMaximized(false);
+  rptModal.hidden = true;
+  navActions.forEach((b) => b.classList.remove("is-active"));
+}
+
+function _rptSetMaximized(on) {
+  _rptMaximized = on;
+  rptModalPanel?.classList.toggle("rpt-modal__panel--maximized", on);
+  const btn = document.getElementById("rptModalMaximize");
+  if (btn) btn.setAttribute("aria-label", on ? "Restore chart size" : "Maximize chart");
+}
+
+if (rptModal) {
+  rptModal.addEventListener("click", (e) => {
+    if (!(e.target instanceof Element)) return;
+    if (e.target === rptModal || e.target.closest("[data-rpt-close]")) {
+      if (_rptMaximized) _rptSetMaximized(false);
+      else closeReportsModal();
+      return;
+    }
+    const chartTab = e.target.closest("[data-rpt-chart]");
+    if (chartTab) {
+      _rptActiveChart = Number(chartTab.dataset.rptChart);
+      _rptSyncHeader();
+      _rptRenderChart();
+      return;
+    }
+    const typeBtn = e.target.closest("[data-rpt-type]");
+    if (typeBtn) {
+      _rptChartType = typeBtn.dataset.rptType;
+      _rptSyncHeader();
+      _rptRenderChart();
+      return;
+    }
+    const periodBtn = e.target.closest("[data-rpt-period]");
+    if (periodBtn) {
+      _rptPeriod = periodBtn.dataset.rptPeriod;
+      _rptSyncHeader();
+      _rptRenderChart();
+      return;
+    }
+  });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && rptModal && !rptModal.hidden) {
+    if (_rptMaximized) _rptSetMaximized(false);
+    else closeReportsModal();
+  }
+});
+
+
