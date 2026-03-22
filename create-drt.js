@@ -650,15 +650,22 @@
   // Compute Additional Info outline position & width dynamically, respecting current excelCanvasCollapsed state
   function computeAddlInfoOutlineMetrics() {
     const baseCols = getSpreadsheetBaseColumnsForCurrentView();
+    // Anchor at the SKU column's left edge so the label/button appear above SKU.
     let left = SPREADSHEET_ROW_HEADER_WIDTH;
     let width = 0;
+    let reachedSku = false;
     let found = false;
+    let pastGroup = false;
     for (const col of baseCols) {
+      if (pastGroup) break;
       const w = col.width || col.minWidth || 120;
+      if (col.key === "sku") reachedSku = true;
       if (ADDITIONAL_INFO_KEYS.includes(col.key)) { found = true; width += w; }
-      else if (!found) { left += w; }
+      else if (found) { pastGroup = true; }
+      else if (!reachedSku) { left += w; }  // columns before SKU (e.g. chartAction)
+      else { width += w; }                  // SKU + columns between SKU and addlInfo group
     }
-    // Toggle is now on the LEFT — expanded width covers the group; collapsed shows toggle + label only.
+    // Expanded width spans from SKU to the end of the addlInfo columns.
     const expandedWidth = width;
     const collapsedWidth = EXCEL_OUTLINE_TOGGLE_SIZE + 90;
     return { left, expandedWidth, collapsedWidth };
@@ -2421,7 +2428,7 @@
     if (excelOutline) {
       const workpadHideAfter = excelCanvasCollapsed
         ? EXCEL_OUTLINE_TOGGLE_SIZE + 90
-        : SPREADSHEET_ROW_HEADER_WIDTH + EXCEL_CANVAS_TOTAL_WIDTH;
+        : SPREADSHEET_ROW_HEADER_WIDTH + EXCEL_CANVAS_TOTAL_WIDTH - EXCEL_CHART_COLUMN_WIDTH;
       excelOutline.style.setProperty("--excel-outline-shift", `${scrollLeft}px`);
       excelOutline.classList.toggle("create-drt-excel-outline-hidden", scrollLeft > workpadHideAfter);
     }
@@ -3641,7 +3648,7 @@
       // Label+button sit above the row-number column (offset=0); line extends across calc columns.
       const collapsedWidth = EXCEL_OUTLINE_TOGGLE_SIZE + 90;
       excelOutline.style.setProperty("--excel-outline-offset", "0px");
-      excelOutline.style.setProperty("--excel-outline-width", `${collapsed ? collapsedWidth : SPREADSHEET_ROW_HEADER_WIDTH + EXCEL_CANVAS_TOTAL_WIDTH}px`);
+      excelOutline.style.setProperty("--excel-outline-width", `${collapsed ? collapsedWidth : SPREADSHEET_ROW_HEADER_WIDTH + EXCEL_CANVAS_TOTAL_WIDTH - EXCEL_CHART_COLUMN_WIDTH}px`);
     }
     if (excelToggle) {
       excelToggle.textContent = collapsed ? "+" : "-";
@@ -3774,10 +3781,10 @@
   const savedAddlInfoCollapsed = window.localStorage.getItem("create-drt-addl-info-collapsed") === "true";
   const savedPricingInfoCollapsed = window.localStorage.getItem("create-drt-pricing-info-collapsed") === "true";
   const savedProductInfoGroupCollapsed = window.localStorage.getItem("create-drt-product-info-collapsed") === "true";
-  applyExcelCollapsed(savedExcelCollapsed);
-  applyAddlInfoCollapsed(savedAddlInfoCollapsed);
+  applyExcelCollapsed(true);
+  applyAddlInfoCollapsed(true);
   applyPricingInfoCollapsed(savedPricingInfoCollapsed);
-  applyProductInfoGroupCollapsed(savedProductInfoGroupCollapsed);
+  applyProductInfoGroupCollapsed(true);
 
   function applyHeaderCollapsed(collapsed) {
     document.body.classList.toggle("create-drt-header-collapsed", collapsed);

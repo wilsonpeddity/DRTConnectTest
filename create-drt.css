@@ -2294,8 +2294,6 @@ body[data-theme="night"] .create-drt-prevalidate-btn:hover {
 
 #createDrtExcelOutline {
   left: 0;
-  width: auto;
-  min-width: 150px;
   justify-content: flex-start;
   padding-left: 6px;
 }
@@ -4392,13 +4390,13 @@ body[data-theme="night"] .create-drt-scenario-hint {
   height: 30px;
   padding: 0 8px;
   border-radius: 9px;
-  background: linear-gradient(135deg, #0176d3 0%, #014486 100%);
+  background: #1E40AF;
   color: #ffffff;
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.03em;
-  box-shadow: 0 3px 8px rgba(1, 118, 211, 0.18);
+  box-shadow: 0 3px 8px rgba(30, 64, 175, 0.25);
 }
 
 .create-drt-toolbar-product-count-label {
@@ -4422,8 +4420,8 @@ body[data-theme="night"] .create-drt-tb-divider {
 }
 
 body[data-theme="night"] .create-drt-toolbar-product-count-number {
-  background: linear-gradient(135deg, #0f6cbd 0%, #0a3d6b 100%);
-  color: #f8fbff;
+  background: #1E40AF;
+  color: #ffffff;
   box-shadow: 0 3px 10px rgba(10, 61, 107, 0.32);
 }
 

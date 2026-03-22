@@ -314,6 +314,7 @@ function renderUnreadUpdates() {
   unreadUpdatesList.innerHTML = "";
   data.forEach((update) => {
     const li = document.createElement("li");
+    li.id = "unread-update-" + update.id;
     li.className = "unread-update-item" + (update.completed ? " is-completed" : "");
     li.dataset.id = update.id;
     const checkbox = document.createElement("input");
@@ -322,9 +323,10 @@ function renderUnreadUpdates() {
     checkbox.setAttribute("aria-label", "Mark as complete");
     const content = document.createElement("span");
     content.className = "unread-update-content";
+    const idPrefix = update.ticketId ? update.ticketId + " · " : "";
     const dateTime = update.createdAt || "";
     const prefix = dateTime ? dateTime + " – " : "";
-    const displayText = prefix + (update.text || "");
+    const displayText = idPrefix + prefix + (update.text || "");
     const text = document.createElement("span");
     text.className = "unread-update-text";
     text.textContent = displayText;
@@ -344,9 +346,10 @@ function renderUnreadUpdates() {
 }
 
 function getUpdateDisplayText(update) {
+  const idPrefix = update.ticketId ? update.ticketId + " · " : "";
   const dateTime = update.createdAt || "";
   const prefix = dateTime ? dateTime + " – " : "";
-  return prefix + (update.text || "");
+  return idPrefix + prefix + (update.text || "");
 }
 
 function copyUpdateToClipboard(update, evt) {
@@ -411,6 +414,7 @@ function renderUpdatesModal() {
   updatesModalBody.innerHTML = "";
   data.forEach((update) => {
     const tr = document.createElement("tr");
+    tr.id = "update-" + update.id;
     tr.className = update.completed ? "update-read" : "update-unread";
     const status = update.completed ? "Read" : "Unread";
     const readOn = update.readOn || "—";
