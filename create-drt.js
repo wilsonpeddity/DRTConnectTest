@@ -3778,8 +3778,8 @@
     }
     if (pricingInfoToggleEl) {
       pricingInfoToggleEl.textContent = collapsed ? "+" : "-";
-      pricingInfoToggleEl.title = collapsed ? "Show Pricing columns" : "Hide Pricing columns";
-      pricingInfoToggleEl.setAttribute("aria-label", collapsed ? "Show Pricing columns" : "Hide Pricing columns");
+      pricingInfoToggleEl.title = collapsed ? "Show Pricing Info columns" : "Hide Pricing Info columns";
+      pricingInfoToggleEl.setAttribute("aria-label", collapsed ? "Show Pricing Info columns" : "Hide Pricing Info columns");
       pricingInfoToggleEl.setAttribute("aria-expanded", collapsed ? "false" : "true");
     }
     // Pricing toggle shifts product info outline position
