@@ -4342,26 +4342,33 @@ body[data-theme="night"] .create-drt-scenario-hint {
 }
 
 .create-drt-history-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  border: 1px solid #dce3ef;
-  background: #ffffff;
-  color: #475569;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  border-radius: 10px;
+  border: 1px solid #d7e3f4;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  color: #5f6f86;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.75);
   cursor: pointer;
   transition: border-color 0.14s ease, background 0.14s ease, color 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease;
 }
 
+.create-drt-history-btn__icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex: 0 0 18px;
+}
+
 .create-drt-history-btn:hover:not(:disabled),
 .create-drt-history-btn:focus-visible:not(:disabled) {
-  background: #f8fbff;
-  border-color: #bfd3ee;
-  color: #1e3a5f;
-  box-shadow: 0 2px 6px rgba(1, 118, 211, 0.12);
+  background: linear-gradient(180deg, #ffffff 0%, #eef5ff 100%);
+  border-color: #b9cceb;
+  color: #234264;
+  box-shadow: 0 4px 10px rgba(1, 118, 211, 0.12);
 }
 
 .create-drt-history-btn:active:not(:disabled) {
@@ -4369,7 +4376,7 @@ body[data-theme="night"] .create-drt-scenario-hint {
 }
 
 .create-drt-history-btn:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -4430,16 +4437,16 @@ body[data-theme="night"] .create-drt-toolbar-product-count-label {
 }
 
 body[data-theme="night"] .create-drt-history-btn {
-  background: #111b2d;
-  border-color: #334155;
-  color: #c6d3e3;
-  box-shadow: none;
+  background: linear-gradient(180deg, #122033 0%, #0f1b2d 100%);
+  border-color: #314760;
+  color: #c7d6e8;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 body[data-theme="night"] .create-drt-history-btn:hover:not(:disabled),
 body[data-theme="night"] .create-drt-history-btn:focus-visible:not(:disabled) {
-  background: #16253b;
-  border-color: #436185;
+  background: linear-gradient(180deg, #16283f 0%, #122134 100%);
+  border-color: #4b6790;
   color: #eef6ff;
   box-shadow: 0 0 0 2px rgba(67, 97, 133, 0.2);
 }

@@ -721,6 +721,11 @@
   let currentWorkpadProductCount = 0;
   const spreadsheetFormulaStore = new Map();
   const pendingSpreadsheetFormulaChanges = new Map();
+  const spreadsheetUndoStack = [];
+  const spreadsheetRedoStack = [];
+  const SPREADSHEET_HISTORY_LIMIT = 100;
+  const SPREADSHEET_INTERNAL_SOURCE = "drt-sync";
+  let spreadsheetHistoryLocked = false;
   // Explicit next-cell target set by handleSpreadsheetChange on Enter-key edits.
   // restoreSpreadsheetSelection() consumes this first, bypassing activeSpreadsheetCell.
   let _pendingEditSelection = null; // { x: colIndex, y: rowIndex }
@@ -829,6 +834,47 @@
       grp2Yr:     [...(row.grp2Yr     || [])],
       grp3Yr:     [...(row.grp3Yr     || [])],
     }));
+  }
+
+  function captureSpreadsheetHistorySnapshot() {
+    _saveCurrentScenario();
+    return {
+      rows: _deepCloneRows(drtRows),
+      formulas: Array.from(spreadsheetFormulaStore.entries()),
+    };
+  }
+
+  function restoreSpreadsheetFormulaStore(entries) {
+    spreadsheetFormulaStore.clear();
+    (entries || []).forEach(([key, value]) => {
+      spreadsheetFormulaStore.set(key, value);
+    });
+    pendingSpreadsheetFormulaChanges.clear();
+  }
+
+  function pushSpreadsheetHistorySnapshot() {
+    if (spreadsheetHistoryLocked) return;
+    spreadsheetUndoStack.push(captureSpreadsheetHistorySnapshot());
+    if (spreadsheetUndoStack.length > SPREADSHEET_HISTORY_LIMIT) spreadsheetUndoStack.shift();
+    spreadsheetRedoStack.length = 0;
+  }
+
+  function restoreSpreadsheetHistorySnapshot(snapshot) {
+    if (!snapshot) return;
+    spreadsheetHistoryLocked = true;
+    drtRows = _deepCloneRows(snapshot.rows);
+    const activeScenario = _scenarios.find((scenario) => scenario.id === _activeScenarioId);
+    if (activeScenario) {
+      activeScenario.rows = _deepCloneRows(drtRows);
+    }
+    restoreSpreadsheetFormulaStore(snapshot.formulas);
+    populateProductFilter();
+    updateWorkpadProductCountDisplay(getVisibleProductCount(drtRows));
+    renderSpreadsheet();
+    requestAnimationFrame(() => {
+      spreadsheetHistoryLocked = false;
+      refreshSpreadsheetHistoryButtons();
+    });
   }
 
   function _saveCurrentScenario() {
@@ -1111,7 +1157,7 @@
     const previousRenderingState = spreadsheetIsRendering;
     spreadsheetIsRendering = true;
     try {
-      hot.setDataAtCell(y, x, normalizedValue);
+      hot.setDataAtCell(y, x, normalizedValue, SPREADSHEET_INTERNAL_SOURCE);
     } catch {}
     spreadsheetIsRendering = previousRenderingState;
   }
@@ -2001,9 +2047,8 @@
   }
 
   function refreshSpreadsheetHistoryButtons() {
-    const plugin = getSpreadsheetUndoRedoPlugin();
-    const canUndo = !!(plugin && typeof plugin.isUndoAvailable === "function" && plugin.isUndoAvailable());
-    const canRedo = !!(plugin && typeof plugin.isRedoAvailable === "function" && plugin.isRedoAvailable());
+    const canUndo = spreadsheetUndoStack.length > 0;
+    const canRedo = spreadsheetRedoStack.length > 0;
 
     if (undoButton) {
       undoButton.disabled = !canUndo;
@@ -2058,6 +2103,9 @@
   function handleSpreadsheetChange(changes, source) {
     if (spreadsheetIsRendering) return;
     if (!changes) return;
+    if (!spreadsheetHistoryLocked && source && source !== "loadData" && source !== SPREADSHEET_INTERNAL_SOURCE) {
+      pushSpreadsheetHistorySnapshot();
+    }
     let needsRender = false;
     let lastEditedY = null;
     let lastEditedX = null;
@@ -2118,7 +2166,7 @@
                   }
                 }
               }
-              if (updates.length) hot.setDataAtCell(updates);
+              if (updates.length) hot.setDataAtCell(updates, SPREADSHEET_INTERNAL_SOURCE);
               spreadsheetIsRendering = false;
               hot.render();
               refreshSpreadsheetHistoryButtons();
@@ -2701,6 +2749,7 @@
   function addRow() {
     const input = document.getElementById("addRowsCount");
     const count = input ? Math.max(1, parseInt(input.value, 10) || 1) : 1;
+    pushSpreadsheetHistorySnapshot();
     for (let i = 0; i < count; i++) {
       const nextId = getNextRowIndex();
       drtRows.unshift(generateBlankRow(nextId));
@@ -3060,6 +3109,7 @@
     const row = spreadsheetVisibleRows[y];
     if (!column || !row || !canEditSpreadsheetColumn(column)) return null;
 
+    pushSpreadsheetHistorySnapshot();
     const nextValue = normalizeSpreadsheetEntry(column, formulaInput.value);
     if (!setRowValueFromSpreadsheet(column, row, nextValue.displayValue)) return null;
     setStoredFormula(row, column, nextValue.formula);
@@ -3271,6 +3321,7 @@
       if (deleteButton) {
         const rowId = deleteButton.getAttribute("data-delete-row-id");
         if (rowId) {
+          pushSpreadsheetHistorySnapshot();
           drtRows = drtRows.filter((row) => String(row.id) !== rowId);
           populateProductFilter();
           renderSpreadsheet();
@@ -3290,27 +3341,21 @@
 
   if (undoButton) {
     undoButton.addEventListener("click", () => {
-      const plugin = getSpreadsheetUndoRedoPlugin();
-      if (!plugin || typeof plugin.isUndoAvailable !== "function" || !plugin.isUndoAvailable()) return;
-      if (typeof plugin.undo === "function") plugin.undo();
-      else {
-        const hot = getSpreadsheetWorksheet();
-        if (hot && typeof hot.undo === "function") hot.undo();
-      }
-      requestAnimationFrame(refreshSpreadsheetHistoryButtons);
+      if (!spreadsheetUndoStack.length || spreadsheetHistoryLocked) return;
+      const currentSnapshot = captureSpreadsheetHistorySnapshot();
+      const previousSnapshot = spreadsheetUndoStack.pop();
+      spreadsheetRedoStack.push(currentSnapshot);
+      restoreSpreadsheetHistorySnapshot(previousSnapshot);
     });
   }
 
   if (redoButton) {
     redoButton.addEventListener("click", () => {
-      const plugin = getSpreadsheetUndoRedoPlugin();
-      if (!plugin || typeof plugin.isRedoAvailable !== "function" || !plugin.isRedoAvailable()) return;
-      if (typeof plugin.redo === "function") plugin.redo();
-      else {
-        const hot = getSpreadsheetWorksheet();
-        if (hot && typeof hot.redo === "function") hot.redo();
-      }
-      requestAnimationFrame(refreshSpreadsheetHistoryButtons);
+      if (!spreadsheetRedoStack.length || spreadsheetHistoryLocked) return;
+      const currentSnapshot = captureSpreadsheetHistorySnapshot();
+      const nextSnapshot = spreadsheetRedoStack.pop();
+      spreadsheetUndoStack.push(currentSnapshot);
+      restoreSpreadsheetHistorySnapshot(nextSnapshot);
     });
   }
 
