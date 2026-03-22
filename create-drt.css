@@ -4390,13 +4390,13 @@ body[data-theme="night"] .create-drt-scenario-hint {
   height: 30px;
   padding: 0 8px;
   border-radius: 9px;
-  background: #1E40AF;
+  background: #0F766E;
   color: #ffffff;
   font-size: 0.9rem;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.03em;
-  box-shadow: 0 3px 8px rgba(30, 64, 175, 0.25);
+  box-shadow: 0 3px 8px rgba(15, 118, 110, 0.28);
 }
 
 .create-drt-toolbar-product-count-label {
@@ -4420,9 +4420,9 @@ body[data-theme="night"] .create-drt-tb-divider {
 }
 
 body[data-theme="night"] .create-drt-toolbar-product-count-number {
-  background: #1E40AF;
+  background: #0F766E;
   color: #ffffff;
-  box-shadow: 0 3px 10px rgba(10, 61, 107, 0.32);
+  box-shadow: 0 3px 10px rgba(15, 118, 110, 0.32);
 }
 
 body[data-theme="night"] .create-drt-toolbar-product-count-label {

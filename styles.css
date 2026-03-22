@@ -628,7 +628,7 @@ body[data-theme="night"] .unread-updates-scroll:hover::-webkit-scrollbar-thumb {
 
 .hero-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   padding: 14px 18px;
   border-radius: var(--radius-lg);
   max-height: 42vh;
@@ -674,6 +674,7 @@ body[data-theme="night"] .unread-updates-scroll:hover::-webkit-scrollbar-thumb {
 
 .metric-stat {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -687,6 +688,7 @@ body[data-theme="night"] .unread-updates-scroll:hover::-webkit-scrollbar-thumb {
 }
 
 .metric-stat:hover {
+  z-index: 20;
   box-shadow: 0 4px 12px rgba(3, 45, 96, 0.10);
   transform: translateY(-1px);
 }
@@ -1027,7 +1029,7 @@ body[data-theme="night"] .unread-updates-scroll:hover::-webkit-scrollbar-thumb {
   visibility: hidden;
   pointer-events: none;
   transition: opacity var(--transition), visibility var(--transition), transform var(--transition);
-  z-index: 20;
+  z-index: 500;
   text-align: left;
 }
 
@@ -1058,13 +1060,19 @@ body[data-theme="night"] .unread-updates-scroll:hover::-webkit-scrollbar-thumb {
   bottom: 10px;
   left: 10px;
   margin: 0;
+  z-index: 10;
+}
+
+.feature-stats .info-icon-corner:hover,
+.feature-stats .info-icon-wrap:hover {
+  z-index: 200;
 }
 
 .feature-stats .info-icon-sm .info-tooltip {
   left: 0;
   transform: translateY(-6px);
-  width: 300px;
-  max-width: min(320px, 90vw);
+  width: 360px;
+  max-width: min(380px, calc(100vw - 48px));
   padding: 10px 12px;
   font-size: 0.7rem;
   line-height: 1.5;
@@ -1073,6 +1081,10 @@ body[data-theme="night"] .unread-updates-scroll:hover::-webkit-scrollbar-thumb {
   border: 1px solid #e2e8f0;
   white-space: normal;
   overflow-wrap: break-word;
+}
+
+.metric-stat:has(.info-icon-wrap:hover) {
+  z-index: 250;
 }
 
 .feature-stats .info-icon-corner .info-tooltip {
