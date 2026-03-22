@@ -3989,7 +3989,8 @@
   const scenarioRestoreBtn = document.getElementById("createDrtScenarioRestoreBtn");
 
   // Hide / show the entire scenario bar
-  let _scenarioBarCollapsed = window.localStorage.getItem("drt-scenario-bar-collapsed") === "true";
+  // Always start with the scenario bar hidden on page load for both create/load DRT.
+  let _scenarioBarCollapsed = true;
 
   function _applyScenarioBarCollapsed(collapsed) {
     _scenarioBarCollapsed = collapsed;
