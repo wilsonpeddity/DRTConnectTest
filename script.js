@@ -11,6 +11,7 @@ const modalLayout = document.getElementById("modalLayout");
 const createDrtModalContent = document.getElementById("createDrtModalContent");
 const updatesModalContent = document.getElementById("updatesModalContent");
 const updatesModalBody = document.getElementById("updatesModalBody");
+const updatesSearchInput = document.getElementById("updatesSearchInput");
 const searchResults = document.getElementById("searchResults");
 const secondaryAction = document.getElementById("secondaryAction");
 const primaryAction = document.getElementById("primaryAction");
@@ -28,6 +29,7 @@ const savedTheme = window.localStorage.getItem("drt-theme");
 const CURRENT_USER = "Wilson Peddity";
 let currentQueue = "highPriority";
 let searchQuery = "";
+let updatesSearchQuery = "";
 let sortColumn = null;
 let sortDirection = 1;
 
@@ -408,10 +410,32 @@ function getSortedUpdatesForModal() {
   return [...unread, ...read];
 }
 
+function getFilteredUpdatesForModal() {
+  const query = (updatesSearchQuery || "").trim().toLowerCase();
+  const data = getSortedUpdatesForModal();
+  if (!query) return data;
+  return data.filter((update) => {
+    const haystack = [
+      update.ticketId || "",
+      update.text || "",
+      update.createdAt || "",
+      update.readOn || "",
+    ].join(" ").toLowerCase();
+    return haystack.includes(query);
+  });
+}
+
 function renderUpdatesModal() {
   if (!updatesModalBody) return;
-  const data = getSortedUpdatesForModal();
+  const data = getFilteredUpdatesForModal();
   updatesModalBody.innerHTML = "";
+  if (!data.length) {
+    const tr = document.createElement("tr");
+    tr.className = "update-empty-row";
+    tr.innerHTML = `<td colspan="4" class="update-empty-cell">No DD Updates match this search.</td>`;
+    updatesModalBody.appendChild(tr);
+    return;
+  }
   data.forEach((update) => {
     const tr = document.createElement("tr");
     tr.id = "update-" + update.id;
@@ -443,6 +467,13 @@ function renderUpdatesModal() {
     }
     actionsCell.appendChild(copyBtn);
     updatesModalBody.appendChild(tr);
+  });
+}
+
+if (updatesSearchInput) {
+  updatesSearchInput.addEventListener("input", (event) => {
+    updatesSearchQuery = event.target.value || "";
+    renderUpdatesModal();
   });
 }
 
@@ -488,6 +519,9 @@ function openModal(type) {
   searchResults.hidden = !config.searchMode || isUpdatesModal || isCreateModal;
 
   if (isUpdatesModal) {
+    if (updatesSearchInput) {
+      updatesSearchInput.value = updatesSearchQuery;
+    }
     renderUpdatesModal();
   } else if (isCreateModal) {
     const accountSearch = document.getElementById("createDrtAccountSearch");

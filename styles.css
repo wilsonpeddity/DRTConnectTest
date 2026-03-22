@@ -1685,6 +1685,47 @@ body[data-theme="night"] .create-drt-option:hover {
   width: min(480px, 95vw);
 }
 
+.updates-modal-toolbar {
+  margin-bottom: 12px;
+}
+
+.updates-modal-search {
+  position: relative;
+}
+
+.updates-modal-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.updates-modal-search-input {
+  width: 100%;
+  padding: 12px 14px 12px 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+
+.updates-modal-search-input::placeholder {
+  color: var(--muted);
+}
+
+.updates-modal-search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(1, 118, 211, 0.12);
+}
+
 .updates-modal-scroll {
   max-height: 420px;
   overflow-y: auto;
@@ -1752,6 +1793,12 @@ body[data-theme="night"] .create-drt-option:hover {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.update-empty-cell {
+  text-align: center;
+  color: var(--muted);
+  padding: 18px 14px;
 }
 
 .copy-update-btn {
