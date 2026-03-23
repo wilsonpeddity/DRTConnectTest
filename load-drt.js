@@ -31,6 +31,9 @@
     const row = drtId ? queueData.find((r) => r.id === drtId) : null;
     const names = ["Maya Chen", "James Wilson", "Wilson Peddity", "Sarah Lee", "William Peddity", "Noor Patel", "Ishan Rao"];
     assignedToInput.value = (row && row.owner) ? row.owner : names[Math.floor(Math.random() * names.length)];
+    if (typeof window.refreshPersonChips === "function") {
+      window.refreshPersonChips();
+    }
   }
 
   const assignToInput = document.getElementById("createDrtAssignTo");

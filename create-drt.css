@@ -139,6 +139,33 @@ body[data-theme="night"].create-drt-screen {
   color: #475569;
 }
 
+.create-drt-person-chip-field {
+  position: relative;
+}
+
+.create-drt-person-chip-display {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  display: none;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.create-drt-person-chip-field.has-person-chip .create-drt-person-chip-display {
+  display: inline-flex;
+}
+
+.create-drt-person-chip-field.has-person-chip .create-drt-input {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.create-drt-person-chip-field.has-person-chip .create-drt-input::placeholder {
+  color: transparent;
+}
+
 .create-drt-input {
   padding: 10px 14px;
   font-size: 0.9rem;
@@ -607,7 +634,7 @@ body[data-theme="night"] .create-drt-result-pill--na .create-drt-result-dot { ba
   padding: 0;
   margin-bottom: 12px;
   box-shadow: 0 2px 12px rgba(3, 45, 96, 0.07), 0 1px 3px rgba(0,0,0,0.04);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .create-drt-screen .create-drt-header-shell {
@@ -888,6 +915,12 @@ body.create-drt-header-collapsed .create-drt-header-grid {
 }
 .create-drt-meta-fields--row3 .create-drt-meta-item {
   overflow: visible;
+  position: relative;
+  z-index: 2;
+}
+
+.create-drt-result-picker[aria-expanded="true"] {
+  z-index: 20;
 }
 
 .create-drt-screen .create-drt-meta-item {
@@ -1242,6 +1275,7 @@ body[data-theme="night"].create-drt-screen .create-drt-header {
 
 body[data-theme="night"].create-drt-screen .create-drt-header-top {
   background: linear-gradient(90deg, #05204a 0%, #0a3d6b 100%);
+  border-radius: 20px 20px 0 0;
 }
 
 body[data-theme="night"].create-drt-screen .create-drt-meta-card {
@@ -1274,10 +1308,22 @@ body[data-theme="night"].create-drt-screen .create-drt-input {
   border-color: #3d444d;
   color: #e6edf3;
 }
+body[data-theme="night"].create-drt-screen .create-drt-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2358a6ff' stroke-width='2.2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-color: #1c2128;
+}
 body[data-theme="night"].create-drt-screen .create-drt-input:focus {
   border-color: #58a6ff;
   background: #22272e;
   box-shadow: 0 0 0 3px rgba(88,166,255,0.15);
+}
+body[data-theme="night"].create-drt-screen .create-drt-select:hover,
+body[data-theme="night"].create-drt-screen .create-drt-select:focus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2358a6ff' stroke-width='2.2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
 }
 /* Night mode — readonly: clearly darker/muted, dashed border */
 body[data-theme="night"].create-drt-screen .create-drt-input[readonly],
@@ -1289,6 +1335,10 @@ body[data-theme="night"].create-drt-screen .create-drt-value.create-drt-owner-ch
 }
 body[data-theme="night"].create-drt-screen .create-drt-value.create-drt-owner-chip {
   font-style: normal;
+}
+body[data-theme="night"].create-drt-screen .create-drt-person-chip-field.has-person-chip .create-drt-input {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 body[data-theme="night"].create-drt-screen .create-drt-meta-footer {

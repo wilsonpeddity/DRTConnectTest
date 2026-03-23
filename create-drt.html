@@ -186,7 +186,10 @@
                   </div>
                   <div class="create-drt-meta-item">
                     <label for="createDrtAssignedTo">Assigned To</label>
-                    <input id="createDrtAssignedTo" type="text" class="create-drt-input" placeholder="—" readonly>
+                    <div class="create-drt-person-chip-field">
+                      <input id="createDrtAssignedTo" type="text" class="create-drt-input" placeholder="—" readonly>
+                      <span class="create-drt-value create-drt-owner-chip create-drt-person-chip-display" data-person-chip-display data-target-input="createDrtAssignedTo" hidden></span>
+                    </div>
                   </div>
                   <div class="create-drt-meta-item">
                     <label for="createDrtModifiedDate">Modified Date</label>

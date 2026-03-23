@@ -182,7 +182,10 @@
                   </div>
                   <div class="create-drt-meta-item">
                     <label for="createDrtAssignedTo">Assigned To</label>
-                    <input id="createDrtAssignedTo" type="text" class="create-drt-input" placeholder="—" readonly>
+                    <div class="create-drt-person-chip-field">
+                      <input id="createDrtAssignedTo" type="text" class="create-drt-input" placeholder="—" readonly>
+                      <span class="create-drt-value create-drt-owner-chip create-drt-person-chip-display" data-person-chip-display data-target-input="createDrtAssignedTo" hidden></span>
+                    </div>
                   </div>
                   <div class="create-drt-meta-item">
                     <label for="createDrtModifiedDate">Modified Date</label>
@@ -208,6 +211,11 @@
                       </span>
                       <svg class="create-drt-priority-chevron" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
                       <ul class="create-drt-priority-dropdown create-drt-result-dropdown" role="listbox" aria-labelledby="loadDrtResultLabel">
+                        <li class="create-drt-result-option" data-value="" role="option" tabindex="-1">
+                          <span class="create-drt-result-pill create-drt-result-pill--empty">
+                            <span class="create-drt-result-text">-</span>
+                          </span>
+                        </li>
                         <li class="create-drt-result-option" data-value="won" role="option" tabindex="-1">
                           <span class="create-drt-result-pill create-drt-result-pill--won">
                             <span class="create-drt-result-dot"></span>

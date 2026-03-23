@@ -458,6 +458,12 @@
   function renderOwnerChips() {
     document.querySelectorAll("[data-owner-chip]").forEach((node) => {
       const name = String(node.dataset.ownerName || node.textContent || "").trim();
+      renderPersonChipNode(node, name);
+    });
+  }
+
+  function renderPersonChipNode(node, name) {
+      if (!node) return;
       const initials = getInitials(name);
       const theme = getOwnerChipTheme(initials);
 
@@ -477,7 +483,31 @@
 
       node.appendChild(avatar);
       node.appendChild(label);
+  }
+
+  function renderAssignedToChips() {
+    document.querySelectorAll("[data-person-chip-display]").forEach((node) => {
+      const inputId = node.dataset.targetInput || "";
+      const input = inputId ? document.getElementById(inputId) : null;
+      const wrapper = node.closest(".create-drt-person-chip-field");
+      const name = String(input?.value || "").trim();
+
+      if (!name) {
+        node.innerHTML = "";
+        node.hidden = true;
+        wrapper?.classList.remove("has-person-chip");
+        return;
+      }
+
+      renderPersonChipNode(node, name);
+      node.hidden = false;
+      wrapper?.classList.add("has-person-chip");
     });
+  }
+
+  function renderAllPersonChips() {
+    renderOwnerChips();
+    renderAssignedToChips();
   }
 
   function evaluateFormula(formula) {
@@ -824,6 +854,7 @@
         if (txt) txt.textContent = LABELS[pri] || "Low";
       }
     }
+    renderAssignedToChips();
   }
 
   function _deepCloneRows(rows) {
@@ -3685,7 +3716,7 @@
   }
 
   applyTheme(savedTheme === "night" ? "night" : "day");
-  renderOwnerChips();
+  renderAllPersonChips();
 
   function applyExcelCollapsed(collapsed) {
     excelCanvasCollapsed = !!collapsed;
@@ -3946,9 +3977,17 @@
     el.addEventListener("change", refreshDealInfoSaveState);
   });
 
+  const assignedToField = document.getElementById("createDrtAssignedTo");
+  if (assignedToField) {
+    assignedToField.addEventListener("input", renderAssignedToChips);
+    assignedToField.addEventListener("change", renderAssignedToChips);
+  }
+
   requestAnimationFrame(() => {
     setDealInfoBaseline();
   });
+
+  window.refreshPersonChips = renderAllPersonChips;
 
   // ── Priority Pill Picker ──
   const priorityPicker = document.getElementById("createDrtPriorityPicker");
