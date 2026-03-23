@@ -1,7 +1,16 @@
+html {
+  color-scheme: light;
+}
+
 /* Lock the page to viewport height so the spreadsheet never scrolls off-screen */
 body.create-drt-screen {
+  color-scheme: light;
   overflow: hidden;
   height: 100vh;
+}
+
+body[data-theme="night"].create-drt-screen {
+  color-scheme: dark;
 }
 
 /* Create DRT Page */
@@ -2668,11 +2677,47 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
 }
 
 /* Data cell font size and vertical alignment */
+#createDrtSpreadsheet .handsontable,
+#createDrtSpreadsheet .handsontable .wtHolder,
+#createDrtSpreadsheet .handsontable .wtHider,
+#createDrtSpreadsheet .handsontable .wtSpreader,
+#createDrtSpreadsheet .handsontable table.htCore {
+  background: #ffffff;
+  border-color: #dbe3ee !important;
+}
+
 #createDrtSpreadsheet .handsontable td {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #dbe3ee !important;
   font-size: 15px !important;
   line-height: 1.2 !important;
   padding: 0 4px !important;
   vertical-align: middle !important;
+}
+
+#createDrtSpreadsheet .handsontable tbody tr:nth-child(even) td {
+  background: #f8fbff !important;
+}
+
+#createDrtSpreadsheet .handsontable td.area {
+  background: rgba(1, 118, 211, 0.10) !important;
+  color: #0f172a !important;
+}
+
+#createDrtSpreadsheet .handsontable td.current {
+  background: #e8f1ff !important;
+  color: #0f172a !important;
+}
+
+#createDrtSpreadsheet .handsontable .handsontableInputHolder {
+  background: #ffffff !important;
+}
+
+#createDrtSpreadsheet .handsontable .handsontableInput {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
 }
 
 .create-drt-row-header-wrap {
