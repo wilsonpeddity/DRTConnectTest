@@ -1967,7 +1967,7 @@
             ? "htDimmed"
             : column.kind === "chart-action"
               ? "create-drt-chart-icon-cell htCenter htMiddle"
-              : "",
+              : "create-drt-editable-cell",
       };
       if (isSelect) {
         return { ...base, type: "dropdown", source: column.source || [], strict: false };

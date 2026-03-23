@@ -1,6 +1,6 @@
 /* DRT Connect - Salesforce-inspired theme, Google Sites compatible */
 html {
-  color-scheme: light;
+  color-scheme: only light;
 }
 
 :root {
@@ -17,7 +17,7 @@ html {
 
 /* Salesforce color palette: Cloud Blue #00A1E0, Primary #0176D3, Navy #032D60 */
 body[data-theme="day"] {
-  color-scheme: light;
+  color-scheme: only light;
   --bg-gradient: linear-gradient(180deg, #f3f6f9 0%, #eef1f6 50%, #e8ecf3 100%);
   --shell-panel: rgba(255, 255, 255, 0.95);
   --panel: #ffffff;
@@ -42,7 +42,7 @@ body[data-theme="day"] {
 
 /* Market-standard dark mode: GitHub/Material-inspired palette */
 body[data-theme="night"] {
-  color-scheme: dark;
+  color-scheme: only dark;
   --bg-gradient: linear-gradient(180deg, #0d1117 0%, #161b22 50%, #21262d 100%);
   --shell-panel: rgba(22, 27, 34, 0.98);
   --panel: #161b22;

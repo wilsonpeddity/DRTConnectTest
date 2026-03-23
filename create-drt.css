@@ -1,16 +1,16 @@
 html {
-  color-scheme: light;
+  color-scheme: only light;
 }
 
 /* Lock the page to viewport height so the spreadsheet never scrolls off-screen */
 body.create-drt-screen {
-  color-scheme: light;
+  color-scheme: only light;
   overflow: hidden;
   height: 100vh;
 }
 
 body[data-theme="night"].create-drt-screen {
-  color-scheme: dark;
+  color-scheme: only dark;
 }
 
 /* Create DRT Page */
@@ -2677,6 +2677,19 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
 }
 
 /* Data cell font size and vertical alignment */
+#createDrtSpreadsheet,
+#createDrtSpreadsheet .handsontable,
+#createDrtSpreadsheet .handsontable .wtHolder,
+#createDrtSpreadsheet .handsontable .wtHider,
+#createDrtSpreadsheet .handsontable .wtSpreader,
+#createDrtSpreadsheet .handsontable table.htCore,
+#createDrtSpreadsheet .handsontable td,
+#createDrtSpreadsheet .handsontable th,
+.create-drt-excel-canvas-panel,
+.create-drt-excel-toolbar {
+  forced-color-adjust: none;
+}
+
 #createDrtSpreadsheet .handsontable,
 #createDrtSpreadsheet .handsontable .wtHolder,
 #createDrtSpreadsheet .handsontable .wtHider,
@@ -2696,7 +2709,18 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
   vertical-align: middle !important;
 }
 
+#createDrtSpreadsheet .handsontable td.create-drt-editable-cell {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #dbe3ee !important;
+  box-shadow: inset 0 0 0 1px rgba(1, 118, 211, 0.04);
+}
+
 #createDrtSpreadsheet .handsontable tbody tr:nth-child(even) td {
+  background: #f8fbff !important;
+}
+
+#createDrtSpreadsheet .handsontable tbody tr:nth-child(even) td.create-drt-editable-cell {
   background: #f8fbff !important;
 }
 
@@ -3357,20 +3381,33 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .wtHider,
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .wtSpreader,
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable table.htCore {
+  color-scheme: only dark;
   background: #0f172a;
   border-color: #334155 !important;
 }
 
 /* Body cells */
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable td {
+  color-scheme: only dark;
   background: #111827;
   border-color: #334155 !important;
   color: #e6edf3 !important;
 }
 
+body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable td.create-drt-editable-cell {
+  background: #1f293d !important;
+  color: #f4f8ff !important;
+  border-color: #43556e !important;
+  box-shadow: inset 0 0 0 1px rgba(88, 166, 255, 0.08);
+}
+
 /* Alternating rows */
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable tbody tr:nth-child(even) td {
   background: #0f172a;
+}
+
+body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable tbody tr:nth-child(even) td.create-drt-editable-cell {
+  background: #1f293d !important;
 }
 
 /* Row header column */
@@ -3395,9 +3432,9 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable t
 
 /* Read-only cells (htDimmed) — day mode */
 .create-drt-screen #createDrtSpreadsheet .handsontable td.htDimmed {
-  background: rgba(233, 233, 233, 0.42) !important;
-  color: #1e2430 !important;
-  border-color: rgba(200, 200, 200, 0.58) !important;
+  background: #edf2f7 !important;
+  color: #334155 !important;
+  border-color: #d1dae6 !important;
 }
 
 /* PG column — white background so bars stand out */
@@ -3431,8 +3468,9 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable t
 
 /* Read-only cells (htDimmed) — night mode */
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable td.htDimmed {
-  background: #172033 !important;
+  background: #263552 !important;
   color: #cbd5e1 !important;
+  border-color: #4a5d78 !important;
 }
 
 /* Active cell editor — dark background, light text */
