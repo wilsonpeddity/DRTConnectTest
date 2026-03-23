@@ -24,7 +24,6 @@ const drtRowsContainer = document.getElementById("drtRows");
 const queueSearchInput = document.getElementById("queueSearchInput");
 const unreadUpdatesList = document.getElementById("unreadUpdatesList");
 const sortableHeaders = document.querySelectorAll(".sortable");
-const savedTheme = window.localStorage.getItem("drt-theme");
 
 const CURRENT_USER = "Wilson Peddity";
 let currentQueue = "highPriority";
@@ -663,7 +662,7 @@ searchResults.querySelectorAll(".search-result").forEach((button) => {
   });
 });
 
-applyTheme(savedTheme === "night" ? "night" : "day");
+applyTheme("day");
 currentQueue = "highPriority";
 tabPills.forEach((pill) => {
   pill.classList.toggle("is-selected", pill.dataset.queue === "highPriority");

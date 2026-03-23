@@ -2535,6 +2535,7 @@ body[data-theme="night"] .create-drt-addl-info-label {
   background: #ffffff !important;
   background-color: #ffffff !important;
   border-color: #dde2e8 !important;
+  border-left: 2px solid #dbe3ee !important;
 }
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable td.create-drt-chart-icon-cell,
 body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .ht_master td.create-drt-chart-icon-cell,
@@ -2627,6 +2628,13 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
   text-align: center !important;
   vertical-align: middle !important;
   padding: 0 !important;
+}
+
+#createDrtSpreadsheet .handsontable th.create-drt-chart-header-cell,
+#createDrtSpreadsheet .handsontable .ht_master thead th.create-drt-chart-header-cell,
+#createDrtSpreadsheet .handsontable .ht_clone_top thead th.create-drt-chart-header-cell,
+#createDrtSpreadsheet .handsontable .ht_clone_inline_start thead th.create-drt-chart-header-cell {
+  border-left: 2px solid #dbe3ee !important;
 }
 
 .create-drt-chart-header-icon {
@@ -2724,6 +2732,7 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
 
 #createDrtSpreadsheet .handsontable .ht_clone_inline_start tbody th.create-drt-row-header-cell {
   padding: 0 !important;
+  border-right: 2px solid #dbe3ee !important;
 }
 
 /* Data cell font size and vertical alignment */
@@ -2767,11 +2776,11 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
 }
 
 #createDrtSpreadsheet .handsontable tbody tr:nth-child(even) td {
-  background: #f8fbff !important;
+  background: #ffffff !important;
 }
 
 #createDrtSpreadsheet .handsontable tbody tr:nth-child(even) td.create-drt-editable-cell {
-  background: #f8fbff !important;
+  background: #ffffff !important;
 }
 
 #createDrtSpreadsheet .handsontable td.area {
@@ -3468,6 +3477,10 @@ body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .
   background: #0f172a !important;
   border-color: #334155 !important;
   color: #cbd5e1 !important;
+}
+
+body[data-theme="night"].create-drt-screen #createDrtSpreadsheet .handsontable .ht_clone_inline_start tbody th.create-drt-row-header-cell {
+  border-right: 2px solid #4a5d78 !important;
 }
 
 /* Selection highlight — muted dark teal so text stays readable */
